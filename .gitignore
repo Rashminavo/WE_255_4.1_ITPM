@@ -1,0 +1,37 @@
+# Flutter/Dart/Pub
+.dart_tool/
+.pub/
+build/
+.packages
+pubspec.lock
+
+# Generated files
+generated_plugin_registrant.dart
+
+# IntelliJ / Android Studio
+*.iml
+.idea/
+
+# VS Code
+.vscode/
+
+# Android
+android/.gradle/
+android/local.properties
+**/local.properties
+**/build/
+
+# iOS
+Pods/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Runner.xcworkspace/
+ios/Flutter/engine
+
+# Misc
+.DS_Store
+*.log
+*.keystore
+# https://dart.dev/guides/libraries/private-files
+# Created by `dart pub`
+.dart_tool/
