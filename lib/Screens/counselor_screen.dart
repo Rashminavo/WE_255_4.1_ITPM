@@ -137,14 +137,14 @@ class _CounselorScreenState extends State<CounselorScreen>
                 ),
                 borderRadius: BorderRadius.circular(16),
                 border:
-                    Border.all(color: const Color(0xFF1D9E75).withOpacity(0.2)),
+                    Border.all(color: const Color(0xFF1D9E75).withValues(alpha: 0.2)),
               ),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1D9E75).withOpacity(0.2),
+                      color: const Color(0xFF1D9E75).withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(Icons.lock,
@@ -213,7 +213,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF1D9E75).withOpacity(0.1),
+                    color: const Color(0xFF1D9E75).withValues(alpha: 0.1),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
@@ -243,7 +243,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                                     end: Alignment.bottomRight,
                                     colors: [
                                       const Color(0xFFE8F8F2),
-                                      const Color(0xFF1D9E75).withOpacity(0.3),
+                                      const Color(0xFF1D9E75).withValues(alpha: 0.3),
                                     ],
                                   ),
                                   shape: BoxShape.circle,
@@ -251,7 +251,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                                       ? [
                                           BoxShadow(
                                             color: const Color(0xFF1D9E75)
-                                                .withOpacity(
+                                                .withValues(alpha: 
                                               0.2 +
                                                   (_pulseController.value *
                                                       0.3),
@@ -385,7 +385,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                                             ? [
                                                 BoxShadow(
                                                   color: const Color(0xFF4CAF50)
-                                                      .withOpacity(0.5),
+                                                      .withValues(alpha: 0.5),
                                                   blurRadius: 4,
                                                   spreadRadius: 1,
                                                 ),
@@ -520,7 +520,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                           end: Alignment.bottomRight,
                           colors: [
                             const Color(0xFFE8F8F2),
-                            const Color(0xFF1D9E75).withOpacity(0.3),
+                            const Color(0xFF1D9E75).withValues(alpha: 0.3),
                           ],
                         ),
                         shape: BoxShape.circle,
@@ -650,7 +650,7 @@ class _CounselorScreenState extends State<CounselorScreen>
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: const Color(0xFF1D9E75).withOpacity(0.1),
+            color: const Color(0xFF1D9E75).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: const Color(0xFF1D9E75), size: 20),
@@ -705,7 +705,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1D9E75).withOpacity(0.1),
+                      color: const Color(0xFF1D9E75).withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: AnimatedBuilder(
@@ -767,3 +767,4 @@ class _CounselorScreenState extends State<CounselorScreen>
     });
   }
 }
+

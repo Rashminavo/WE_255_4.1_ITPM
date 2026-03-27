@@ -50,20 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyB9ZsDmmv19CCu2iKfdMtZSX-MPQ0knh3M',
-    appId: '1:589530377538:web:beb08b1f4ea422fb18acdb',
-    messagingSenderId: '589530377538',
-    projectId: 'ragasafesl-25f7d',
-    authDomain: 'ragasafesl-25f7d.firebaseapp.com',
-    storageBucket: 'ragasafesl-25f7d.firebasestorage.app',
+    apiKey: 'AIzaSyCxSnexwHo528AB605yRmlQtZH1297OJGo',
+    appId: '1:49558448472:web:pending',
+    messagingSenderId: '49558448472',
+    projectId: 'itpm-new',
+    authDomain: 'itpm-new.firebaseapp.com',
+    storageBucket: 'itpm-new.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDSzP6jnOopV1XWjetku8DBdSWKbp_FqWs',
-    appId: '1:589530377538:android:000b7700ebffa41018acdb',
-    messagingSenderId: '589530377538',
-    projectId: 'ragasafesl-25f7d',
-    storageBucket: 'ragasafesl-25f7d.firebasestorage.app',
+    apiKey: 'AIzaSyCxSnexwHo528AB605yRmlQtZH1297OJGo',
+    appId: '1:49558448472:android:c526a2f9b317722fa75d2d',
+    messagingSenderId: '49558448472',
+    projectId: 'itpm-new',
+    storageBucket: 'itpm-new.firebasestorage.app',
   );
 
 }

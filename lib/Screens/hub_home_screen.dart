@@ -121,7 +121,7 @@ class HubHomeScreen extends StatelessWidget {
           Text(
             'Your guide to a safe campus environment',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.75),
+              color: Colors.white.withValues(alpha: 0.75),
               fontSize: 13,
             ),
           ),
@@ -171,7 +171,7 @@ class _HubCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withValues(alpha: 0.08),
               blurRadius: 10,
               offset: const Offset(0, 4),
             )
@@ -186,12 +186,12 @@ class _HubCard extends StatelessWidget {
                 Text(
                   number,
                   style: TextStyle(
-                    color: textColor.withOpacity(0.35),
+                    color: textColor.withValues(alpha: 0.35),
                     fontSize: 28,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                Icon(icon, color: textColor.withOpacity(0.8), size: 26),
+                Icon(icon, color: textColor.withValues(alpha: 0.8), size: 26),
               ],
             ),
             const Spacer(),
@@ -208,7 +208,7 @@ class _HubCard extends StatelessWidget {
             Text(
               subtitle,
               style: TextStyle(
-                color: textColor.withOpacity(0.7),
+                color: textColor.withValues(alpha: 0.7),
                 fontSize: 11,
                 height: 1.3,
               ),
@@ -220,7 +220,7 @@ class _HubCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: textColor.withOpacity(0.12),
+                    color: textColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(Icons.arrow_forward_rounded,
@@ -234,3 +234,4 @@ class _HubCard extends StatelessWidget {
     );
   }
 }
+
