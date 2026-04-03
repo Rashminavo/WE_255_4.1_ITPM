@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../Screens/dashboard_screen.dart';
-import '../Screens/hub_home_screen.dart';
-import '../Screens/buddy_hub_screen.dart';
-import '../Screens/profile_screen.dart';
+import '../screens/dashboard_screen.dart';
+import '../screens/hub_home_screen.dart';
+import '../screens/buddy_hub_screen.dart';
+import '../screens/profile_screen.dart';
 import '../features/reporting/report_screen.dart';
 import '../features/sos/sos_screen.dart';
 

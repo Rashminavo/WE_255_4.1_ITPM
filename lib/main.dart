@@ -9,7 +9,9 @@ import 'providers/buddy_provider.dart';
 import 'providers/chat_provider.dart';
 import 'providers/forum_provider.dart';
 import 'providers/meetup_provider.dart';
-import 'Screens/splash_screen.dart';
+import 'providers/user_provider.dart';
+import 'providers/theme_provider.dart';
+import 'screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +37,12 @@ class RagaSafeApp extends StatelessWidget {
       providers: [
         // Auth Provider
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        
+        // User Provider
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        
+        // Theme Provider
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         
         // RagaSafe Providers
         ChangeNotifierProvider(create: (_) => RagaSafeProvider()),
