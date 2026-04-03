@@ -10,24 +10,23 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
   late AnimationController _mainController;
   late AnimationController _pulseController;
   late AnimationController _rotationController;
   late AnimationController _particleController;
-
+  
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
   late Animation<double> _slideAnimation;
   late Animation<double> _pulseAnimation;
-
+  
   final List<ParticleModel> _particles = [];
 
   @override
   void initState() {
     super.initState();
-
+    
     // Main animation controller
     _mainController = AnimationController(
       duration: const Duration(milliseconds: 2000),
@@ -107,8 +106,7 @@ class _SplashScreenState extends State<SplashScreen>
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const OnboardingScreen(),
+          pageBuilder: (context, animation, secondaryAnimation) => const OnboardingScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
               opacity: animation,
@@ -135,237 +133,217 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            // Animated gradient background
-            AnimatedBuilder(
-              animation: _rotationController,
-              builder: (context, child) {
-                return Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        const Color(0xFF1D9E75),
-                        Color.lerp(
-                            const Color(0xFF1D9E75),
-                            const Color(0xFF0F6E56),
-                            (_rotationController.value * 2) % 1.0)!,
-                        const Color(0xFF085041),
-                      ],
-                      stops: const [0.0, 0.5, 1.0],
-                    ),
+      body: Stack(
+        children: [
+          // Animated gradient background
+          AnimatedBuilder(
+            animation: _rotationController,
+            builder: (context, child) {
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      const Color(0xFF10212B),  // Dark blue
+                      Color.lerp(const Color(0xFF10212B), const Color(0xFF1A2F3A), 
+                          (_rotationController.value * 2) % 1.0)!,
+                      const Color(0xFF1F3B42),  // Teal-green
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
+          ),
 
-            // Floating particles
-            AnimatedBuilder(
-              animation: _particleController,
+          // Floating particles
+          AnimatedBuilder(
+            animation: _particleController,
+            builder: (context, child) {
+              return CustomPaint(
+                painter: ParticlePainter(
+                  particles: _particles,
+                  animation: _particleController,
+                ),
+                size: Size.infinite,
+              );
+            },
+          ),
+
+          // Decorative rotating circles
+          ..._buildDecorativeCircles(),
+
+          // Main content
+          Center(
+            child: AnimatedBuilder(
+              animation: _mainController,
               builder: (context, child) {
-                return CustomPaint(
-                  painter: ParticlePainter(
-                    particles: _particles,
-                    animation: _particleController,
-                  ),
-                  size: Size(screenSize.width, screenSize.height),
-                );
-              },
-            ),
-
-            // Decorative rotating circles
-            ..._buildDecorativeCircles(screenSize),
-
-            // Main content
-            Center(
-              child: AnimatedBuilder(
-                animation: _mainController,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: _fadeAnimation.value,
-                    child: Transform.translate(
-                      offset: Offset(0, _slideAnimation.value),
-                      child: Transform.scale(
-                        scale: _scaleAnimation.value,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // Pulsing logo with glow
-                            AnimatedBuilder(
-                              animation: _pulseAnimation,
-                              builder: (context, child) {
-                                return Transform.scale(
-                                  scale: _pulseAnimation.value,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(35),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      gradient: RadialGradient(
-                                        colors: [
-                                          Colors.white.withValues(alpha: 0.3),
-                                          Colors.white.withValues(alpha: 0.1),
-                                        ],
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.white.withValues(alpha: 
-                                              0.4 * _pulseAnimation.value),
-                                          blurRadius: 40,
-                                          spreadRadius: 10,
-                                        ),
+                return Opacity(
+                  opacity: _fadeAnimation.value,
+                  child: Transform.translate(
+                    offset: Offset(0, _slideAnimation.value),
+                    child: Transform.scale(
+                      scale: _scaleAnimation.value,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Pulsing logo with glow
+                          AnimatedBuilder(
+                            animation: _pulseAnimation,
+                            builder: (context, child) {
+                              return Transform.scale(
+                                scale: _pulseAnimation.value,
+                                child: Container(
+                                  padding: const EdgeInsets.all(35),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: RadialGradient(
+                                      colors: [
+                                        Colors.white.withOpacity(0.3),
+                                        Colors.white.withOpacity(0.1),
                                       ],
                                     ),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(20),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withValues(alpha: 0.2),
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Colors.white.withValues(alpha: 0.3),
-                                          width: 2,
-                                        ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.white.withOpacity(0.4 * _pulseAnimation.value),
+                                        blurRadius: 40,
+                                        spreadRadius: 10,
                                       ),
-                                      child: const Icon(
-                                        Icons.shield,
-                                        size: 70,
-                                        color: Colors.white,
+                                    ],
+                                  ),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(20),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.2),
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Colors.white.withOpacity(0.3),
+                                        width: 2,
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
-                            ),
-
-                            const SizedBox(height: 40),
-
-                            // Animated title with shimmer effect
-                            ShimmerText(
-                              text: "RagSafe SL",
-                              style: const TextStyle(
-                                fontSize: 42,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                letterSpacing: 3,
-                              ),
-                            ),
-
-                            const SizedBox(height: 12),
-
-                            // Subtitle with fade delay
-                            FadeTransition(
-                              opacity: CurvedAnimation(
-                                parent: _mainController,
-                                curve: const Interval(0.5, 1.0,
-                                    curve: Curves.easeOut),
-                              ),
-                              child: SlideTransition(
-                                position: Tween<Offset>(
-                                  begin: const Offset(0, 1),
-                                  end: Offset.zero,
-                                ).animate(CurvedAnimation(
-                                  parent: _mainController,
-                                  curve: const Interval(0.5, 1.0,
-                                      curve: Curves.easeOutCubic),
-                                )),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Text(
-                                    "Stay Protected on Campus",
-                                    style: TextStyle(
-                                      fontSize: 16,
+                                    child: const Icon(
+                                      Icons.shield,
+                                      size: 70,
                                       color: Colors.white,
-                                      letterSpacing: 1.5,
                                     ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          
+                          const SizedBox(height: 40),
+                          
+                          // Animated title with shimmer effect
+                          ShimmerText(
+                            text: "RagSafe SL",
+                            style: const TextStyle(
+                              fontSize: 42,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              letterSpacing: 3,
+                            ),
+                          ),
+                          
+                          const SizedBox(height: 12),
+                          
+                          // Subtitle with fade delay
+                          FadeTransition(
+                            opacity: CurvedAnimation(
+                              parent: _mainController,
+                              curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
+                            ),
+                            child: SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(0, 1),
+                                end: Offset.zero,
+                              ).animate(CurvedAnimation(
+                                parent: _mainController,
+                                curve: const Interval(0.5, 1.0, curve: Curves.easeOutCubic),
+                              )),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Text(
+                                  "Stay Protected on Campus",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    letterSpacing: 1.5,
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
+          ),
 
-            // Bottom loading indicator
-            Positioned(
-              bottom: 60,
-              left: 0,
-              right: 0,
-              child: FadeTransition(
-                opacity: CurvedAnimation(
-                  parent: _mainController,
-                  curve: const Interval(0.7, 1.0),
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 3,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.white.withValues(alpha: 0.8),
-                        ),
+          // Bottom loading indicator
+          Positioned(
+            bottom: 60,
+            left: 0,
+            right: 0,
+            child: FadeTransition(
+              opacity: CurvedAnimation(
+                parent: _mainController,
+                curve: const Interval(0.7, 1.0),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.white.withOpacity(0.8),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      "Loading...",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white.withValues(alpha: 0.7),
-                        letterSpacing: 2,
-                      ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "Loading...",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withOpacity(0.7),
+                      letterSpacing: 2,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  List<Widget> _buildDecorativeCircles(Size screenSize) {
-    // Responsive sizing based on screen dimensions
-    final circle1Size = screenSize.width * 0.35;
-    final circle2Size = screenSize.width * 0.5;
-
-    // Ensure minimum sizes
-    final size1 = circle1Size.clamp(180.0, 250.0);
-    final size2 = circle2Size.clamp(250.0, 350.0);
-
+  List<Widget> _buildDecorativeCircles() {
     return [
       AnimatedBuilder(
         animation: _rotationController,
         builder: (context, child) {
           return Positioned(
-            top: -size1 * 0.3 +
-                math.sin(_rotationController.value * 2 * math.pi) * 20,
-            right: -size1 * 0.3 +
-                math.cos(_rotationController.value * 2 * math.pi) * 20,
+            top: -100 + math.sin(_rotationController.value * 2 * math.pi) * 30,
+            right: -100 + math.cos(_rotationController.value * 2 * math.pi) * 30,
             child: Container(
-              width: size1,
-              height: size1,
+              width: 250,
+              height: 250,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: Colors.white.withOpacity(0.1),
                   width: 1,
                 ),
               ),
@@ -377,17 +355,15 @@ class _SplashScreenState extends State<SplashScreen>
         animation: _rotationController,
         builder: (context, child) {
           return Positioned(
-            bottom: -size2 * 0.35 +
-                math.cos(_rotationController.value * 2 * math.pi) * 25,
-            left: -size2 * 0.35 +
-                math.sin(_rotationController.value * 2 * math.pi) * 25,
+            bottom: -150 + math.cos(_rotationController.value * 2 * math.pi) * 40,
+            left: -150 + math.sin(_rotationController.value * 2 * math.pi) * 40,
             child: Container(
-              width: size2,
-              height: size2,
+              width: 350,
+              height: 350,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.08),
+                  color: Colors.white.withOpacity(0.08),
                   width: 1,
                 ),
               ),
@@ -435,7 +411,7 @@ class ParticlePainter extends CustomPainter {
 
     for (var particle in particles) {
       particle.update();
-      paint.color = Colors.white.withValues(alpha: particle.opacity);
+      paint.color = Colors.white.withOpacity(particle.opacity);
       canvas.drawCircle(
         Offset(particle.x * size.width, particle.y * size.height),
         particle.size,
@@ -458,8 +434,7 @@ class ShimmerText extends StatefulWidget {
   State<ShimmerText> createState() => _ShimmerTextState();
 }
 
-class _ShimmerTextState extends State<ShimmerText>
-    with SingleTickerProviderStateMixin {
+class _ShimmerTextState extends State<ShimmerText> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -509,4 +484,3 @@ class _ShimmerTextState extends State<ShimmerText>
     );
   }
 }
-

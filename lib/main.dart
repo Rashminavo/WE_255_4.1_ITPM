@@ -53,20 +53,24 @@ class RagaSafeApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ForumProvider()),
         ChangeNotifierProvider(create: (_) => MeetupProvider()),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'RagaSafe + PeerBuddy',
-        
-        // Themes with brand colors
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        
-        // Entry point
-        home: const SplashScreen(),
-        
-        builder: (context, child) {
-          return child!;
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'RagaSafe + PeerBuddy',
+            
+            // Themes with brand colors
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeProvider.themeMode,
+            
+            // Entry point
+            home: const SplashScreen(),
+            
+            builder: (context, child) {
+              return child!;
+            },
+          );
         },
       ),
     );
