@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/auth_provider.dart';
+import '../services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -11,19 +10,19 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  
+  final AuthService _authService = AuthService();
+
   final _nameController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final _idController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   bool _isLoading = false;
 
-
   @override
   void dispose() {
     _nameController.dispose();
-    _phoneController.dispose();
+    _idController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -32,17 +31,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _registerUser() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
-      
-      final authProvider = context.read<AuthProvider>();
-      final success = await authProvider.register(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-        name: _nameController.text.trim(),
-        phone: _phoneController.text.trim(),
-      );
-      
-      if (mounted) {
-        if (success) {
+
+      try {
+        await _authService.signUp(
+          _emailController.text.trim(),
+          _passwordController.text,
+          _nameController.text.trim(),
+          _idController.text.trim(),
+        );
+
+        if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Registration Successful!'),
@@ -51,17 +49,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           );
           Navigator.pop(context);
-        } else {
+        }
+      } catch (e) {
+        if (mounted) {
+          String errorMessage = 'Registration failed. Please try again.';
+          if (e.toString().contains('email-already-in-use')) {
+            errorMessage =
+                'Email is already registered. Please sign in instead.';
+          } else if (e.toString().contains('weak-password')) {
+            errorMessage = 'Password is too weak. Use at least 6 characters.';
+          } else if (e.toString().contains('invalid-email')) {
+            errorMessage = 'Invalid email format';
+          } else if (e.toString().contains('operation-not-allowed')) {
+            errorMessage = 'Registration is currently disabled';
+          }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(authProvider.error ?? 'Registration failed'),
+              content: Text(errorMessage),
               backgroundColor: Colors.red,
-              behavior: SnackBarBehavior.floating,
             ),
           );
         }
+      } finally {
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
       }
-      setState(() => _isLoading = false);
     }
   }
 
@@ -130,18 +143,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               labelText: "Full Name",
                               prefixIcon: Icon(Icons.person_outline),
                             ),
-                            validator: (val) =>
-                                val == null || val.isEmpty ? "Enter name" : null,
+                            validator: (val) => val == null || val.isEmpty
+                                ? "Enter name"
+                                : null,
                           ),
                           const SizedBox(height: 12),
                           TextFormField(
-                            controller: _phoneController,
+                            controller: _idController,
                             decoration: const InputDecoration(
-                              labelText: "Phone Number",
-                              prefixIcon: Icon(Icons.phone_outlined),
+                              labelText: "Student ID",
+                              prefixIcon: Icon(Icons.badge_outlined),
                             ),
-                            validator: (val) =>
-                                val == null || val.isEmpty ? "Enter phone number" : null,
+                            validator: (val) => val == null || val.isEmpty
+                                ? "Enter Student ID"
+                                : null,
                           ),
                           const SizedBox(height: 12),
                           TextFormField(
@@ -163,10 +178,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               labelText: "Password",
                               prefixIcon: Icon(Icons.lock_outline),
                             ),
-                            validator: (val) =>
-                                val == null || val.length < 6
-                                    ? "Min 6 chars"
-                                    : null,
+                            validator: (val) => val == null || val.length < 6
+                                ? "Min 6 chars"
+                                : null,
                           ),
                           const SizedBox(height: 24),
                           _isLoading

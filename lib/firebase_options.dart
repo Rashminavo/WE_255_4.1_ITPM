@@ -65,5 +65,4 @@ class DefaultFirebaseOptions {
     projectId: 'itpm-new',
     storageBucket: 'itpm-new.firebasestorage.app',
   );
-
 }
