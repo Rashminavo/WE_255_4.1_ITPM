@@ -299,7 +299,7 @@ class _ConsequencesFlowchartScreenState
             width: 100,
             height: 100,
             decoration: BoxDecoration(
-              color: AppColors.darkGreen.withOpacity(0.08),
+              color: AppColors.darkGreen.withValues(alpha: 0.08),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.track_changes_rounded,
@@ -408,7 +408,7 @@ class _ConsequencesFlowchartScreenState
                       backgroundColor: AppColors.darkGreen,
                       foregroundColor: Colors.white,
                       disabledBackgroundColor:
-                          AppColors.darkGreen.withOpacity(0.6),
+                          AppColors.darkGreen.withValues(alpha: 0.6),
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14)),
@@ -425,9 +425,9 @@ class _ConsequencesFlowchartScreenState
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: AppColors.danger.withOpacity(0.08),
+                color: AppColors.danger.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.danger.withOpacity(0.3)),
+                border: Border.all(color: AppColors.danger.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
@@ -502,7 +502,7 @@ class _ConsequencesFlowchartScreenState
         decoration: BoxDecoration(
           color: AppColors.background,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColors.darkGreen.withOpacity(0.3)),
+          border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.3)),
         ),
         child: Row(
           children: [
@@ -560,7 +560,7 @@ class _ConsequencesFlowchartScreenState
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
+                        color: Colors.white.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(Icons.assignment_rounded,
@@ -583,7 +583,7 @@ class _ConsequencesFlowchartScreenState
                           Text(
                             '${_complaint.type} • ${_complaint.category}',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.75),
+                              color: Colors.white.withValues(alpha: 0.75),
                               fontSize: 12,
                             ),
                           ),
@@ -595,8 +595,8 @@ class _ConsequencesFlowchartScreenState
                           horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
                         color: isClosed
-                            ? Colors.green.withOpacity(0.25)
-                            : Colors.orange.withOpacity(0.25),
+                            ? Colors.green.withValues(alpha: 0.25)
+                            : Colors.orange.withValues(alpha: 0.25),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -618,7 +618,7 @@ class _ConsequencesFlowchartScreenState
                   borderRadius: BorderRadius.circular(8),
                   child: LinearProgressIndicator(
                     value: progress,
-                    backgroundColor: Colors.white.withOpacity(0.2),
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
                     valueColor:
                         const AlwaysStoppedAnimation<Color>(Color(0xFF74C69D)),
                     minHeight: 8,
@@ -631,7 +631,7 @@ class _ConsequencesFlowchartScreenState
                     Text(
                       'Step ${currentStep + 1} of ${steps.length}',
                       style: TextStyle(
-                          color: Colors.white.withOpacity(0.7), fontSize: 11),
+                          color: Colors.white.withValues(alpha: 0.7), fontSize: 11),
                     ),
                     Text(
                       '${(progress * 100).toInt()}% Complete',
@@ -738,7 +738,7 @@ class _ConsequencesFlowchartScreenState
                     boxShadow: isCurrent
                         ? [
                             BoxShadow(
-                              color: dotColor.withOpacity(0.5),
+                              color: dotColor.withValues(alpha: 0.5),
                               blurRadius: 10,
                               spreadRadius: 2,
                             )
@@ -756,7 +756,7 @@ class _ConsequencesFlowchartScreenState
                     child: Container(
                       width: 2.5,
                       color: isDone
-                          ? AppColors.lightGreen.withOpacity(0.5)
+                          ? AppColors.lightGreen.withValues(alpha: 0.5)
                           : Colors.grey.shade200,
                     ),
                   ),
@@ -801,13 +801,13 @@ class _ConsequencesFlowchartScreenState
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: isDone
-                            ? Colors.green.withOpacity(0.05)
-                            : (step['color'] as Color).withOpacity(0.06),
+                            ? Colors.green.withValues(alpha: 0.05)
+                            : (step['color'] as Color).withValues(alpha: 0.06),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: isDone
-                              ? Colors.green.withOpacity(0.2)
-                              : (step['color'] as Color).withOpacity(0.2),
+                              ? Colors.green.withValues(alpha: 0.2)
+                              : (step['color'] as Color).withValues(alpha: 0.2),
                         ),
                       ),
                       child: Column(
@@ -894,9 +894,9 @@ class _ConsequencesFlowchartScreenState
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Text(
         label,
@@ -973,3 +973,4 @@ class _StepUpdate {
     required this.note,
   });
 }
+

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../main.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
+import '../auth_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -59,6 +61,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    // Initialize with logged-in user data or defaults
+    final authProvider = context.read<AuthProvider>();
+    _fullName = authProvider.user?.name ?? "Student";
+    _email = authProvider.user?.email ?? "user@example.com";
+    _phone = authProvider.user?.phone ?? "+94 77 000 0000";
+    _faculty = authProvider.user?.faculty ?? "Faculty of Computing";
+    
     _nameController = TextEditingController(text: _fullName);
     _emailController = TextEditingController(text: _email);
     _idController = TextEditingController(text: _studentId);
@@ -76,8 +85,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
-  void _saveProfile() {
+  void _saveProfile() async {
     if (_formKey.currentState!.validate()) {
+      final authProvider = context.read<AuthProvider>();
       setState(() {
         _fullName = _nameController.text.trim();
         _email = _emailController.text.trim();
@@ -86,13 +96,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _phone = _phoneController.text.trim();
         _isEditing = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Profile updated successfully!"),
-          backgroundColor: Color(0xFF1D9E75),
-          behavior: SnackBarBehavior.floating,
-        ),
+      
+      // Update profile in Firebase
+      final success = await authProvider.updateProfile(
+        name: _fullName,
+        phone: _phone,
+        faculty: _faculty,
       );
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(success ? "Profile updated successfully!" : "Failed to update profile"),
+            backgroundColor: success ? const Color(0xFF1D9E75) : Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     }
   }
 
@@ -190,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: const Icon(Icons.arrow_back,
@@ -210,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Icon(_isEditing ? Icons.close : Icons.edit,
@@ -257,7 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(_studentId,
@@ -342,7 +362,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       boxShadow: [
                                         BoxShadow(
                                           color: const Color(0xFF1D9E75)
-                                              .withOpacity(0.3),
+                                              .withValues(alpha: 0.3),
                                           blurRadius: 10,
                                           spreadRadius: 2,
                                         ),
@@ -425,7 +445,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
                                     color: Color(achievement["color"])
-                                        .withOpacity(0.1),
+                                        .withValues(alpha: 0.1),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
@@ -490,7 +510,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFE24B4A)
-                                        .withOpacity(0.1),
+                                        .withValues(alpha: 0.1),
                                     shape: BoxShape.circle,
                                   ),
                                   child: const Icon(
@@ -641,14 +661,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                     ),
-                                    onPressed: () {
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const MyApp()),
-                                        (route) => false,
-                                      );
+                                    onPressed: () async {
+                                      // Sign out from Firebase
+                                      await context.read<AuthProvider>().logout();
+                                      
+                                      // Navigate back to AuthScreen to handle routing
+                                      if (context.mounted) {
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const AuthScreen()),
+                                          (route) => false,
+                                        );
+                                      }
                                     },
                                     child: const Text("Log out",
                                         style: TextStyle(color: Colors.white)),
@@ -729,3 +755,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+

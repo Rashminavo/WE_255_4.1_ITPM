@@ -159,13 +159,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withValues(alpha: 0.05),
                             blurRadius: 10,
                             offset: const Offset(0, 2),
                           ),
                         ],
                         border: notif["isNew"]
-                            ? Border.all(color: const Color(0xFF1D9E75).withOpacity(0.3), width: 1.5)
+                            ? Border.all(color: const Color(0xFF1D9E75).withValues(alpha: 0.3), width: 1.5)
                             : null,
                       ),
                       child: Row(
@@ -174,7 +174,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: Color(notif["color"]).withOpacity(0.15),
+                              color: Color(notif["color"]).withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(notif["icon"] as IconData,
