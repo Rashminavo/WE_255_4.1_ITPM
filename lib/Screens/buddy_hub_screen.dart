@@ -48,49 +48,46 @@ class _BuddyHubScreenState extends State<BuddyHubScreen>
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAF8),
-        appBar: AppBar(
-          title: const Text(
-            "Buddy Network",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          backgroundColor: const Color(0xFF1D9E75),
-          elevation: 0,
-          bottom: TabBar(
-            controller: _tabController,
-            indicatorColor: const Color.fromARGB(255, 25, 153, 38),
-            labelColor: const Color.fromARGB(255, 225, 223, 223),
-            unselectedLabelColor: const Color.fromARGB(255, 225, 223, 223),
-            tabs: const [
-              Tab(
-                icon: Icon(Icons.search),
-                text: "Search",
-              ),
-              Tab(
-                icon: Icon(Icons.notifications),
-                text: "Requests",
-              ),
-              Tab(
-                icon: Icon(Icons.people),
-                text: "My Buddies",
-              ),
-            ],
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8FAF8),
+      appBar: AppBar(
+        title: const Text(
+          "Buddy Network",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        body: TabBarView(
+        backgroundColor: const Color(0xFF1D9E75),
+        elevation: 0,
+        bottom: TabBar(
           controller: _tabController,
-          children: [
-            const BuddySearchScreen(),
-            const BuddyRequestsScreen(),
-            const MyBuddiesScreen(),
+          indicatorColor: const Color.fromARGB(255, 25, 153, 38),
+          labelColor: const Color.fromARGB(255, 225, 223, 223),
+          unselectedLabelColor: const Color.fromARGB(255, 225, 223, 223),
+          tabs: const [
+            Tab(
+              icon: Icon(Icons.search),
+              text: "Search",
+            ),
+            Tab(
+              icon: Icon(Icons.notifications),
+              text: "Requests",
+            ),
+            Tab(
+              icon: Icon(Icons.people),
+              text: "My Buddies",
+            ),
           ],
         ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: const [
+          BuddySearchScreen(),
+          BuddyRequestsScreen(),
+          MyBuddiesScreen(),
+        ],
       ),
     );
   }
