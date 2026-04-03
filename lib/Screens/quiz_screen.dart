@@ -308,8 +308,8 @@ class _QuizScreenState extends State<QuizScreen>
                 height: 80,
                 decoration: BoxDecoration(
                   color: isUrgent
-                      ? AppColors.danger.withValues(alpha: 0.1)
-                      : AppColors.warning.withValues(alpha: 0.1),
+                      ? AppColors.danger.withOpacity(0.1)
+                      : AppColors.warning.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -343,8 +343,8 @@ class _QuizScreenState extends State<QuizScreen>
                 width: 50,
                 decoration: BoxDecoration(
                   color: isUrgent
-                      ? AppColors.danger.withValues(alpha: 0.3)
-                      : AppColors.warning.withValues(alpha: 0.3),
+                      ? AppColors.danger.withOpacity(0.3)
+                      : AppColors.warning.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -512,7 +512,7 @@ class _QuizScreenState extends State<QuizScreen>
               child: Text(
                 '${_currentIndex + 1} / ${_questions.length}',
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.85),
+                  color: Colors.white.withOpacity(0.85),
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
                 ),
@@ -557,7 +557,7 @@ class _QuizScreenState extends State<QuizScreen>
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                     decoration: BoxDecoration(
-                      color: AppColors.darkGreen.withValues(alpha: 0.1),
+                      color: AppColors.darkGreen.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -613,7 +613,7 @@ class _QuizScreenState extends State<QuizScreen>
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.04),
+                              color: Colors.black.withOpacity(0.04),
                               blurRadius: 6,
                               offset: const Offset(0, 2),
                             ),
@@ -627,8 +627,8 @@ class _QuizScreenState extends State<QuizScreen>
                               height: 30,
                               decoration: BoxDecoration(
                                 color: isSelected
-                                    ? Colors.white.withValues(alpha: 0.2)
-                                    : AppColors.darkGreen.withValues(alpha: 0.08),
+                                    ? Colors.white.withOpacity(0.2)
+                                    : AppColors.darkGreen.withOpacity(0.08),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Center(
@@ -805,9 +805,9 @@ class _QuizScreenState extends State<QuizScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
+              color: color.withOpacity(0.1),
               borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: color.withValues(alpha: 0.4)),
+              border: Border.all(color: color.withOpacity(0.4)),
             ),
             child: Text(
               cfg['tag'] as String,
@@ -853,7 +853,7 @@ class _QuizScreenState extends State<QuizScreen>
                   borderRadius: BorderRadius.circular(8),
                   child: LinearProgressIndicator(
                     value: score / maxScore,
-                    backgroundColor: Colors.white.withValues(alpha: 0.2),
+                    backgroundColor: Colors.white.withOpacity(0.2),
                     valueColor: AlwaysStoppedAnimation<Color>(
                       score <= 9
                           ? Colors.green.shade300
@@ -870,11 +870,11 @@ class _QuizScreenState extends State<QuizScreen>
                   children: [
                     Text('0 — Healthy',
                         style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.6),
+                            color: Colors.white.withOpacity(0.6),
                             fontSize: 10)),
                     Text('30 — High Concern',
                         style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.6),
+                            color: Colors.white.withOpacity(0.6),
                             fontSize: 10)),
                   ],
                 ),
@@ -905,9 +905,9 @@ class _QuizScreenState extends State<QuizScreen>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.07),
+              color: color.withOpacity(0.07),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: color.withValues(alpha: 0.25)),
+              border: Border.all(color: color.withOpacity(0.25)),
             ),
             child: Text(
               cfg['message'] as String,
@@ -985,9 +985,9 @@ class _ScoreBand extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
+          color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: color.withValues(alpha: 0.3)),
+          border: Border.all(color: color.withOpacity(0.3)),
         ),
         child: Column(
           children: [
@@ -1003,7 +1003,7 @@ class _ScoreBand extends StatelessWidget {
             Text(
               desc,
               style: TextStyle(
-                color: color.withValues(alpha: 0.8),
+                color: color.withOpacity(0.8),
                 fontSize: 10.5,
               ),
             ),
@@ -1016,4 +1016,3 @@ class _ScoreBand extends StatelessWidget {
 
 // ── Result levels ────────────────────────────────────────────
 enum _QuizResult { healthy, mildConcern, highConcern }
-
