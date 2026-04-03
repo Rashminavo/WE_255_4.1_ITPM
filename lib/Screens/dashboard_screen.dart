@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -6,6 +6,7 @@ import '../providers/user_provider.dart';
 import 'profile_screen.dart';
 import 'notification_screen.dart';
 import 'map_screen.dart';
+import '../features/sos/sos_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -93,7 +94,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF1D9E75).withOpacity(0.1),
+                color: const Color(0xFF1D9E75).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -194,7 +195,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     final isDark = theme.brightness == Brightness.dark;
     final cardColor = isDark ? const Color(0xFF1A332D) : Colors.white;
     final textColor = isDark ? Colors.white : Colors.black87;
-    
+
     final userProvider = Provider.of<UserProvider>(context);
 
     return Scaffold(
@@ -257,7 +258,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF1D9E75).withOpacity(0.3),
+                    color: const Color(0xFF1D9E75).withValues(alpha: 0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -272,20 +273,23 @@ class _DashboardScreenState extends State<DashboardScreen>
                       Container(
                         padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white.withOpacity(0.3)),
+                          border:
+                              Border.all(color: Colors.white.withValues(alpha: 0.3)),
                         ),
                         child: _getImageProvider(userProvider) != null
                             ? CircleAvatar(
                                 radius: 20,
                                 backgroundColor: Colors.white24,
-                                backgroundImage: _getImageProvider(userProvider),
+                                backgroundImage:
+                                    _getImageProvider(userProvider),
                               )
                             : const CircleAvatar(
                                 radius: 20,
                                 backgroundColor: Colors.white24,
-                                child: Icon(Icons.person, color: Colors.white, size: 24),
+                                child: Icon(Icons.person,
+                                    color: Colors.white, size: 24),
                               ),
                       ),
                       const SizedBox(width: 10),
@@ -295,7 +299,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           children: [
                             Text(_greeting,
                                 style: TextStyle(
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                     fontSize: 11)),
                             Text(userProvider.fullName,
                                 overflow: TextOverflow.ellipsis,
@@ -309,7 +313,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ],
                   ),
                   const SizedBox(height: 20),
-                  
+
                   // Safety Status and Check-in Row - FIXED
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -320,19 +324,21 @@ class _DashboardScreenState extends State<DashboardScreen>
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
+                            color: Colors.white.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.white.withOpacity(0.2)),
+                            border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.2)),
                           ),
                           child: Row(
                             children: [
                               Container(
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.25),
+                                  color: Colors.white.withValues(alpha: 0.25),
                                   borderRadius: BorderRadius.circular(14),
                                 ),
-                                child: const Icon(Icons.shield, color: Colors.white, size: 22),
+                                child: const Icon(Icons.shield,
+                                    color: Colors.white, size: 22),
                               ),
                               const SizedBox(width: 10),
                               Expanded(
@@ -364,10 +370,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                                 ),
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [Colors.white, Colors.white.withOpacity(0.9)],
+                                    colors: [
+                                      Colors.white,
+                                      Colors.white.withValues(alpha: 0.9)
+                                    ],
                                   ),
                                   borderRadius: BorderRadius.circular(14),
                                 ),
@@ -404,8 +414,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: _isCheckedIn
-                                      ? [const Color(0xFF4CAF50), const Color(0xFF2E7D32)]
-                                      : [Colors.white, Colors.white.withOpacity(0.95)],
+                                      ? [
+                                          const Color(0xFF4CAF50),
+                                          const Color(0xFF2E7D32)
+                                        ]
+                                      : [
+                                          Colors.white,
+                                          Colors.white.withValues(alpha: 0.95)
+                                        ],
                                 ),
                                 borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
@@ -413,7 +429,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                                     color: (_isCheckedIn
                                             ? const Color(0xFF4CAF50)
                                             : Colors.white)
-                                        .withOpacity(0.4 + (_pulseController.value * 0.3)),
+                                        .withValues(alpha: 0.4 +
+                                            (_pulseController.value * 0.3)),
                                     blurRadius: 15,
                                     spreadRadius: 2,
                                   ),
@@ -423,15 +440,21 @@ class _DashboardScreenState extends State<DashboardScreen>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
-                                    _isCheckedIn ? Icons.fingerprint : Icons.touch_app,
-                                    color: _isCheckedIn ? Colors.white : const Color(0xFF1D9E75),
+                                    _isCheckedIn
+                                        ? Icons.fingerprint
+                                        : Icons.touch_app,
+                                    color: _isCheckedIn
+                                        ? Colors.white
+                                        : const Color(0xFF1D9E75),
                                     size: 22,
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     _isCheckedIn ? "IN" : "CHECK",
                                     style: TextStyle(
-                                      color: _isCheckedIn ? Colors.white : const Color(0xFF1D9E75),
+                                      color: _isCheckedIn
+                                          ? Colors.white
+                                          : const Color(0xFF1D9E75),
                                       fontSize: 10,
                                       fontWeight: FontWeight.w700,
                                     ),
@@ -444,26 +467,29 @@ class _DashboardScreenState extends State<DashboardScreen>
                       ),
                     ],
                   ),
-                  
+
                   // Last check-in info
                   if (_isCheckedIn) ...[
                     const SizedBox(height: 12),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
+                        color: Colors.white.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.access_time, color: Colors.white70, size: 12),
+                          const Icon(Icons.access_time,
+                              color: Colors.white70, size: 12),
                           const SizedBox(width: 4),
                           Flexible(
                             child: Text(
-                              "Checked in at $_lastCheckInLocation • $_lastCheckInTime",
+                              "Checked in at $_lastCheckInLocation â€¢ $_lastCheckInTime",
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(color: Colors.white70, fontSize: 10),
+                              style: const TextStyle(
+                                  color: Colors.white70, fontSize: 10),
                             ),
                           ),
                         ],
@@ -489,15 +515,17 @@ class _DashboardScreenState extends State<DashboardScreen>
                               fontWeight: FontWeight.bold,
                               color: textColor)),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1D9E75).withOpacity(0.1),
+                          color: const Color(0xFF1D9E75).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.flash_on, color: Color(0xFF1D9E75), size: 12),
+                            Icon(Icons.flash_on,
+                                color: Color(0xFF1D9E75), size: 12),
                             SizedBox(width: 4),
                             Text("Fast Access",
                                 style: TextStyle(
@@ -561,7 +589,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const NotificationScreen()),
+                                builder: (context) =>
+                                    const NotificationScreen()),
                           );
                         },
                         style: TextButton.styleFrom(
@@ -570,7 +599,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         child: const Text("See all",
-                            style: TextStyle(fontSize: 12, color: Color(0xFF1D9E75))),
+                            style: TextStyle(
+                                fontSize: 12, color: Color(0xFF1D9E75))),
                       ),
                     ],
                   ),
@@ -581,7 +611,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withValues(alpha: 0.05),
                             blurRadius: 10,
                             offset: const Offset(0, 4))
                       ],
@@ -592,12 +622,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                             "Just now", true, textColor),
                         Divider(
                             height: 1,
-                            color: isDark ? Colors.white12 : Colors.grey.shade200),
+                            color:
+                                isDark ? Colors.white12 : Colors.grey.shade200),
                         _buildAlertItem("Buddy Kavindu accepted your request",
                             "1 hr ago", false, textColor),
                         Divider(
                             height: 1,
-                            color: isDark ? Colors.white12 : Colors.grey.shade200),
+                            color:
+                                isDark ? Colors.white12 : Colors.grey.shade200),
                         _buildAlertItem("New ragging awareness tip available",
                             "3 hr ago", false, textColor),
                       ],
@@ -686,14 +718,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                       ),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
-                          color: const Color(0xFF1D9E75).withOpacity(0.2)),
+                          color: const Color(0xFF1D9E75).withValues(alpha: 0.2)),
                     ),
                     child: Row(
                       children: [
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1D9E75).withOpacity(0.2),
+                            color: const Color(0xFF1D9E75).withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(Icons.lightbulb_outline,
@@ -712,7 +744,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 20),
                 ],
               ),
@@ -720,6 +752,24 @@ class _DashboardScreenState extends State<DashboardScreen>
           ],
         ),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 20.0, right: 20.0),
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SosScreen(),
+              ),
+            );
+          },
+          backgroundColor: const Color(0xFFE24B4A),
+          tooltip: 'Emergency SOS',
+          elevation: 8,
+          child: const Icon(Icons.sos, color: Colors.white, size: 28),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -742,13 +792,13 @@ class _DashboardScreenState extends State<DashboardScreen>
                 end: Alignment.bottomRight,
                 colors: [
                   bgColor,
-                  bgColor.withOpacity(0.7),
+                  bgColor.withValues(alpha: 0.7),
                 ],
               ),
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: iconColor.withOpacity(0.3),
+                  color: iconColor.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -758,7 +808,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.15),
+                  color: iconColor.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: iconColor, size: 22),
@@ -795,7 +845,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -812,14 +862,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                 child: CircularProgressIndicator(
                   value: progress,
                   strokeWidth: 3,
-                  backgroundColor: color.withOpacity(0.1),
+                  backgroundColor: color.withValues(alpha: 0.1),
                   valueColor: AlwaysStoppedAnimation<Color>(color),
                 ),
               ),
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: color, size: 16),
@@ -833,7 +883,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           Text(label,
               style: TextStyle(
                   fontSize: 10,
-                  color: textColor.withOpacity(0.6),
+                  color: textColor.withValues(alpha: 0.6),
                   fontWeight: FontWeight.w500)),
         ],
       ),
@@ -859,7 +909,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, 
+                Text(title,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 13, color: textColor)),
                 const SizedBox(height: 2),
@@ -871,7 +921,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: const Color(0xFF1D9E75).withOpacity(0.1),
+                color: const Color(0xFF1D9E75).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: const Text("NEW",
@@ -885,3 +935,4 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 }
+

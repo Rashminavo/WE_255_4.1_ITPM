@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../services/firestore_service.dart';
@@ -99,7 +99,7 @@ class _MapScreenState extends State<MapScreen> {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).cardColor.withOpacity(0.9),
+                                  color: Theme.of(context).cardColor.withValues(alpha: 0.9),
                                   borderRadius: BorderRadius.circular(4),
                                   border: Border.all(color: color, width: 1),
                                 ),
@@ -169,14 +169,14 @@ class _MapScreenState extends State<MapScreen> {
                       decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.1)),
+                        border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
                       ),
                       child: Row(
                         children: [
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: color.withOpacity(0.1),
+                              color: color.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Icon(icon, color: color, size: 22),
@@ -189,7 +189,7 @@ class _MapScreenState extends State<MapScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                             decoration: BoxDecoration(
-                              color: color.withOpacity(0.1),
+                              color: color.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(zone["status"],

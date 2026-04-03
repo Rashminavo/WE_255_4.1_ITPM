@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'login_screen.dart';
 
@@ -121,21 +121,21 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 left: 0.1,
                 top: 0.2,
                 size: 96,
-                color: Colors.purple.withOpacity(0.15),
+                color: Colors.purple.withValues(alpha: 0.15),
                 controller: _bubble1Controller,
               ),
               _buildFloatingBubble(
                 left: 0.7,
                 top: 0.5,
                 size: 144,
-                color: Colors.orange.withOpacity(0.15),
+                color: Colors.orange.withValues(alpha: 0.15),
                 controller: _bubble2Controller,
               ),
               _buildFloatingBubble(
                 left: 0.2,
                 top: 0.8,
                 size: 80,
-                color: Colors.teal.withOpacity(0.15),
+                color: Colors.teal.withValues(alpha: 0.15),
                 controller: _bubble3Controller,
               ),
               
@@ -146,7 +146,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 child: TextButton(
                   onPressed: _goToLogin,
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.white.withOpacity(0.6),
+                    foregroundColor: Colors.white.withValues(alpha: 0.6),
                   ),
                   child: const Text(
                     "SKIP",
@@ -199,7 +199,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                               decoration: BoxDecoration(
                                 color: _currentPage == index
                                     ? Colors.white
-                                    : Colors.white.withOpacity(0.25),
+                                    : Colors.white.withValues(alpha: 0.25),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                             ),
@@ -275,7 +275,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               color: color,
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(0.3),
+                  color: color.withValues(alpha: 0.3),
                   blurRadius: 40,
                   spreadRadius: 10,
                 ),
@@ -304,7 +304,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFFF6B35).withOpacity(0.4),
+                      color: const Color(0xFFFF6B35).withValues(alpha: 0.4),
                       blurRadius: 60,
                       spreadRadius: 20,
                     ),
@@ -316,7 +316,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 height: 80,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                 ),
                 child: Icon(
                   page.icon,
@@ -335,13 +335,13 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             padding: const EdgeInsets.all(28),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24),
-              color: Colors.white.withOpacity(0.07),
+              color: Colors.white.withValues(alpha: 0.07),
               border: Border.all(
-                color: Colors.white.withOpacity(0.12),
+                color: Colors.white.withValues(alpha: 0.12),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 20,
                   spreadRadius: 5,
                 ),
@@ -372,7 +372,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 Text(
                   page.description,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.65),
+                    color: Colors.white.withValues(alpha: 0.65),
                     fontSize: 14,
                     height: 1.5,
                   ),

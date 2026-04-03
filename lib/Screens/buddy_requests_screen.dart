@@ -84,8 +84,10 @@ class _BuddyRequestsScreenState extends State<BuddyRequestsScreen> {
                     return const SizedBox.shrink();
                   }
 
-                  final requesterName = userSnapshot.data?['name'] as String? ?? "Unknown";
-                  final requesterFaculty = userSnapshot.data?['faculty'] as String? ?? "N/A";
+                  final requesterName =
+                      userSnapshot.data?['name'] as String? ?? "Unknown";
+                  final requesterFaculty =
+                      userSnapshot.data?['faculty'] as String? ?? "N/A";
 
                   return _buildRequestCard(
                     context,
@@ -220,13 +222,15 @@ class _BuddyRequestsScreenState extends State<BuddyRequestsScreen> {
     );
   }
 
-  void _acceptRequest(BuildContext context, String matchId, String currentUserId) {
+  void _acceptRequest(
+      BuildContext context, String matchId, String currentUserId) {
     context
         .read<BuddyProvider>()
         .acceptBuddyRequest(matchId: matchId, userId: currentUserId)
         .then((success) {
+      if (!mounted) return;
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(this.context).showSnackBar(
           const SnackBar(
             content: Text("Request accepted!"),
             duration: Duration(seconds: 2),
@@ -234,7 +238,7 @@ class _BuddyRequestsScreenState extends State<BuddyRequestsScreen> {
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(this.context).showSnackBar(
           const SnackBar(
             content: Text("Failed to accept request"),
             duration: Duration(seconds: 2),
@@ -245,13 +249,15 @@ class _BuddyRequestsScreenState extends State<BuddyRequestsScreen> {
     });
   }
 
-  void _declineRequest(BuildContext context, String matchId, String currentUserId) {
+  void _declineRequest(
+      BuildContext context, String matchId, String currentUserId) {
     context
         .read<BuddyProvider>()
         .declineBuddyRequest(matchId: matchId, userId: currentUserId)
         .then((success) {
+      if (!mounted) return;
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(this.context).showSnackBar(
           const SnackBar(
             content: Text("Request declined"),
             duration: Duration(seconds: 2),
@@ -259,7 +265,7 @@ class _BuddyRequestsScreenState extends State<BuddyRequestsScreen> {
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(this.context).showSnackBar(
           const SnackBar(
             content: Text("Failed to decline request"),
             duration: Duration(seconds: 2),

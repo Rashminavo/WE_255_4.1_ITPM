@@ -76,7 +76,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 TextFormField(
                   controller: _contentController,
                   decoration: InputDecoration(
-                    hintText: "Share your thoughts, experiences, or ask for advice...",
+                    hintText:
+                        "Share your thoughts, experiences, or ask for advice...",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -106,7 +107,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 TextFormField(
                   controller: _tagsController,
                   decoration: InputDecoration(
-                    hintText: "Enter tags separated by commas (e.g., advice, help, question)",
+                    hintText:
+                        "Enter tags separated by commas (e.g., advice, help, question)",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -231,6 +233,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     );
 
     setState(() => _isPosting = false);
+
+    if (!mounted) return;
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(

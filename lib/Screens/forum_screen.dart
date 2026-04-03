@@ -286,7 +286,8 @@ class _ForumScreenState extends State<ForumScreen> {
                           const Spacer(),
                           IconButton(
                             icon: const Icon(Icons.more_vert),
-                            onPressed: () => _showPostOptions(context, post.postId),
+                            onPressed: () =>
+                                _showPostOptions(context, post.postId),
                             iconSize: 20,
                           ),
                         ],
@@ -366,8 +367,9 @@ class _ForumScreenState extends State<ForumScreen> {
   void _reportPost(BuildContext context, String postId) {
     final userId = context.read<AuthProvider>().user?.uid ?? "";
     context.read<ForumProvider>().reportPost(postId, userId).then((success) {
+      if (!mounted) return;
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(this.context).showSnackBar(
           const SnackBar(
             content: Text("Post reported"),
             duration: Duration(seconds: 2),

@@ -34,9 +34,8 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
             .get();
 
         setState(() {
-          _sentRequestUserIds = snapshot.docs
-              .map((doc) => doc['user2Id'] as String)
-              .toSet();
+          _sentRequestUserIds =
+              snapshot.docs.map((doc) => doc['user2Id'] as String).toSet();
         });
       } catch (e) {
         debugPrint('Error loading sent requests: $e');
@@ -71,10 +70,11 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
                 filled: true,
                 fillColor: Colors.white,
               ),
-              onChanged: (value) => setState(() => _searchQuery = value.toLowerCase()),
+              onChanged: (value) =>
+                  setState(() => _searchQuery = value.toLowerCase()),
             ),
           ),
-          
+
           const SizedBox(height: 8),
 
           // All Users List with Request Filtering
@@ -82,9 +82,8 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
             future: _getRequestedUserIds(currentUser?.uid ?? ""),
             builder: (context, requestedSnapshot) {
               return StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('users')
-                    .snapshots(),
+                stream:
+                    FirebaseFirestore.instance.collection('users').snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
@@ -121,19 +120,20 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
                   final requestedUserIds = requestedSnapshot.data ?? {};
 
                   // Filter users - include all except current user and those with active connections
-                  final allUsers = snapshot.data!.docs
-                      .where((doc) {
-                        // Exclude current user
-                        if (doc.id == currentUser?.uid) return false;
-                        
-                        // Apply search filter
-                        if (_searchQuery.isEmpty) return true;
-                        
-                        final name = (doc['name'] ?? '').toString().toLowerCase();
-                        final faculty = (doc['faculty'] ?? doc['department'] ?? '').toString().toLowerCase();
-                        return name.contains(_searchQuery) || faculty.contains(_searchQuery);
-                      })
-                      .toList();
+                  final allUsers = snapshot.data!.docs.where((doc) {
+                    // Exclude current user
+                    if (doc.id == currentUser?.uid) return false;
+
+                    // Apply search filter
+                    if (_searchQuery.isEmpty) return true;
+
+                    final name = (doc['name'] ?? '').toString().toLowerCase();
+                    final faculty = (doc['faculty'] ?? doc['department'] ?? '')
+                        .toString()
+                        .toLowerCase();
+                    return name.contains(_searchQuery) ||
+                        faculty.contains(_searchQuery);
+                  }).toList();
 
                   if (allUsers.isEmpty) {
                     return Padding(
@@ -166,10 +166,14 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
                       itemCount: allUsers.length,
                       itemBuilder: (context, index) {
                         final userDoc = allUsers[index];
-                        final userId = userDoc.id as String;
-                        final name = userDoc['name'] as String? ?? "Unknown";
-                        final faculty = userDoc['faculty'] as String? ?? userDoc['department'] as String? ?? "N/A";
-                        final phone = userDoc['phone'] as String? ?? "";
+                        final userId = userDoc.id;
+                        final data = userDoc.data() as Map<String, dynamic>?;
+
+                        final name = data?['name'] as String? ?? "Unknown";
+                        final faculty = (data?['faculty'] as String?) ??
+                            (data?['department'] as String?) ??
+                            "N/A";
+                        final phone = data?['phone'] as String? ?? "";
 
                         return _buildUserCard(
                           context,
@@ -187,7 +191,7 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
               );
             },
           ),
-          
+
           const SizedBox(height: 24),
         ],
       ),
@@ -199,12 +203,9 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
       final snapshot = await FirebaseFirestore.instance
           .collection('buddy_matches')
           .where('user1Id', isEqualTo: currentUserId)
-          .where('status', whereIn: ['pending', 'active'])
-          .get();
+          .where('status', whereIn: ['pending', 'active']).get();
 
-      return snapshot.docs
-          .map((doc) => doc['user2Id'] as String)
-          .toSet();
+      return snapshot.docs.map((doc) => doc['user2Id'] as String).toSet();
     } catch (e) {
       debugPrint('Error getting requested user IDs: $e');
       return {};
@@ -355,16 +356,20 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
     String toUserId,
     String toUserName,
   ) {
-    context.read<BuddyProvider>().sendBuddyRequest(
-      fromUserId: fromUserId,
-      toUserId: toUserId,
-      matchScore: 75, // Default match score
-    ).then((success) {
+    context
+        .read<BuddyProvider>()
+        .sendBuddyRequest(
+          fromUserId: fromUserId,
+          toUserId: toUserId,
+          matchScore: 75, // Default match score
+        )
+        .then((success) {
+      if (!mounted) return;
       if (success) {
         setState(() {
           _sentRequestUserIds.add(toUserId);
         });
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(this.context).showSnackBar(
           SnackBar(
             content: Text("Request sent to $toUserName!"),
             duration: const Duration(seconds: 2),
@@ -374,7 +379,7 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
         // Reload the sent requests to refresh the pending badge
         _loadSentRequests();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(this.context).showSnackBar(
           const SnackBar(
             content: Text("Failed to send request"),
             duration: Duration(seconds: 2),
@@ -403,7 +408,7 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
 
       if (snapshot.docs.isNotEmpty) {
         final matchId = snapshot.docs.first.id;
-        
+
         // Delete the request
         await FirebaseFirestore.instance
             .collection('buddy_matches')
@@ -415,7 +420,7 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
         });
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          ScaffoldMessenger.of(this.context).showSnackBar(
             SnackBar(
               content: Text("Request to $toUserName cancelled"),
               duration: const Duration(seconds: 2),
@@ -429,7 +434,7 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
     } catch (e) {
       debugPrint('Error cancelling request: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(this.context).showSnackBar(
           const SnackBar(
             content: Text("Failed to cancel request"),
             duration: Duration(seconds: 2),

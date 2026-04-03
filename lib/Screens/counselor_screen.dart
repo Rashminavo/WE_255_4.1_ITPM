@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,7 +31,7 @@ class BookingModel {
 
 class BookingStorage {
   static List<BookingModel> bookings = [];
-  
+
   // Add sample bookings for testing
   static void addSampleBookings() {
     if (bookings.isEmpty) {
@@ -39,7 +39,8 @@ class BookingStorage {
         id: '1',
         studentName: 'Current User',
         counselorName: 'Dr. Priya Mendis',
-        date: DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 2))),
+        date: DateFormat('yyyy-MM-dd')
+            .format(DateTime.now().add(const Duration(days: 2))),
         time: '10:00 AM',
         reason: 'Anxiety / Stress',
         status: 'Confirmed',
@@ -49,7 +50,8 @@ class BookingStorage {
         id: '2',
         studentName: 'Current User',
         counselorName: 'Mr. Kasun Fernando',
-        date: DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 5))),
+        date: DateFormat('yyyy-MM-dd')
+            .format(DateTime.now().add(const Duration(days: 5))),
         time: '02:00 PM',
         reason: 'Academic Pressure',
         status: 'Pending',
@@ -59,7 +61,8 @@ class BookingStorage {
         id: '3',
         studentName: 'Current User',
         counselorName: 'Dr. Roshan Silva',
-        date: DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 1))),
+        date: DateFormat('yyyy-MM-dd')
+            .format(DateTime.now().add(const Duration(days: 1))),
         time: '11:00 AM',
         reason: 'Mental Health Support',
         status: 'Confirmed',
@@ -81,7 +84,7 @@ class _CounselorScreenState extends State<CounselorScreen>
   late AnimationController _slideController;
   late AnimationController _pulseController;
   late List<AnimationController> _cardControllers;
-  
+
   bool _isAnonymousMode = false;
 
   final List<Map<String, dynamic>> _counselors = const [
@@ -132,10 +135,14 @@ class _CounselorScreenState extends State<CounselorScreen>
   ];
 
   final List<String> _timeSlots = [
-    "09:00 AM", "10:00 AM", "11:00 AM", 
-    "02:00 PM", "03:00 PM", "04:00 PM"
+    "09:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "02:00 PM",
+    "03:00 PM",
+    "04:00 PM"
   ];
-  
+
   DateTime _selectedDate = DateTime.now();
   String? _selectedTimeSlot;
   String? _selectedReason;
@@ -152,9 +159,9 @@ class _CounselorScreenState extends State<CounselorScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _loadAnonymousMode();
-    
+
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -222,7 +229,7 @@ class _CounselorScreenState extends State<CounselorScreen>
     _selectedTimeSlot = null;
     _selectedReason = null;
     _selectedDate = DateTime.now();
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -264,7 +271,8 @@ class _CounselorScreenState extends State<CounselorScreen>
                                   end: Alignment.bottomRight,
                                   colors: [
                                     const Color(0xFFE8F8F2),
-                                    const Color(0xFF1D9E75).withOpacity(0.3),
+                                    const Color(0xFF1D9E75)
+                                        .withValues(alpha: 0.3),
                                   ],
                                 ),
                                 shape: BoxShape.circle,
@@ -330,7 +338,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                         const SizedBox(height: 20),
                         const Divider(),
                         const SizedBox(height: 20),
-                        
+
                         // Booking Form
                         const Text(
                           "Book a Session",
@@ -340,7 +348,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
+
                         // Date Selection
                         const Text(
                           "Select Date",
@@ -365,15 +373,18 @@ class _CounselorScreenState extends State<CounselorScreen>
                               Expanded(
                                 child: TextButton(
                                   onPressed: () async {
-                                    final DateTime? picked = await showDatePicker(
+                                    final DateTime? picked =
+                                        await showDatePicker(
                                       context: context,
                                       initialDate: _selectedDate,
                                       firstDate: DateTime.now(),
-                                      lastDate: DateTime.now().add(const Duration(days: 30)),
+                                      lastDate: DateTime.now()
+                                          .add(const Duration(days: 30)),
                                       builder: (context, child) {
                                         return Theme(
                                           data: Theme.of(context).copyWith(
-                                            colorScheme: const ColorScheme.light(
+                                            colorScheme:
+                                                const ColorScheme.light(
                                               primary: Color(0xFF1D9E75),
                                               onPrimary: Colors.white,
                                             ),
@@ -389,7 +400,8 @@ class _CounselorScreenState extends State<CounselorScreen>
                                     }
                                   },
                                   child: Text(
-                                    DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate),
+                                    DateFormat('EEEE, MMMM d, yyyy')
+                                        .format(_selectedDate),
                                     style: const TextStyle(
                                       color: Colors.black87,
                                       fontSize: 13,
@@ -401,7 +413,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
+
                         // Time Slot Selection
                         const Text(
                           "Select Time Slot",
@@ -440,8 +452,12 @@ class _CounselorScreenState extends State<CounselorScreen>
                                 child: Text(
                                   slot,
                                   style: TextStyle(
-                                    color: isSelected ? Colors.white : Colors.black87,
-                                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                    color: isSelected
+                                        ? Colors.white
+                                        : Colors.black87,
+                                    fontWeight: isSelected
+                                        ? FontWeight.w600
+                                        : FontWeight.normal,
                                     fontSize: 12,
                                   ),
                                 ),
@@ -450,7 +466,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                           }).toList(),
                         ),
                         const SizedBox(height: 16),
-                        
+
                         // Reason Selection
                         const Text(
                           "Reason for Counseling",
@@ -466,13 +482,16 @@ class _CounselorScreenState extends State<CounselorScreen>
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.grey.shade300),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.grey.shade300),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade300),
                             ),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 10),
                           ),
                           hint: const Text("Select a reason"),
                           items: _reasons.map((reason) {
@@ -488,7 +507,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                           },
                         ),
                         const SizedBox(height: 24),
-                        
+
                         // Anonymous Mode Info Banner
                         if (_isAnonymousMode)
                           Container(
@@ -496,21 +515,29 @@ class _CounselorScreenState extends State<CounselorScreen>
                             decoration: BoxDecoration(
                               color: const Color(0xFFFFF3E0),
                               borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: const Color(0xFFFF9800).withOpacity(0.3)),
+                              border: Border.all(
+                                  color: const Color(0xFFFF9800)
+                                      .withValues(alpha: 0.3)),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.info_outline, color: Color(0xFFFF9800), size: 14),
+                                const Icon(Icons.info_outline,
+                                    color: Color(0xFFFF9800), size: 14),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: RichText(
                                     text: const TextSpan(
-                                      style: TextStyle(fontSize: 11, color: Color(0xFFE65100)),
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          color: Color(0xFFE65100)),
                                       children: [
                                         TextSpan(text: 'Booking anonymously '),
                                         TextSpan(
                                           text: '(change in Profile Settings)',
-                                          style: TextStyle(fontWeight: FontWeight.w600, decoration: TextDecoration.underline),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              decoration:
+                                                  TextDecoration.underline),
                                         ),
                                       ],
                                     ),
@@ -520,7 +547,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                             ),
                           ),
                         if (_isAnonymousMode) const SizedBox(height: 16),
-                        
+
                         // Book Button
                         SizedBox(
                           width: double.infinity,
@@ -532,7 +559,8 @@ class _CounselorScreenState extends State<CounselorScreen>
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            onPressed: (_selectedTimeSlot != null && _selectedReason != null)
+                            onPressed: (_selectedTimeSlot != null &&
+                                    _selectedReason != null)
                                 ? () {
                                     Navigator.pop(context);
                                     _confirmBooking(counselor);
@@ -549,7 +577,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                           ),
                         ),
                         const SizedBox(height: 12),
-                        
+
                         // Note
                         Container(
                           padding: const EdgeInsets.all(10),
@@ -559,12 +587,14 @@ class _CounselorScreenState extends State<CounselorScreen>
                           ),
                           child: const Row(
                             children: [
-                              Icon(Icons.info_outline, color: Color(0xFF1D9E75), size: 14),
+                              Icon(Icons.info_outline,
+                                  color: Color(0xFF1D9E75), size: 14),
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   "Your booking will be confirmed within 24 hours. You'll receive a notification once confirmed.",
-                                  style: TextStyle(fontSize: 11, color: Color(0xFF0F6E56)),
+                                  style: TextStyle(
+                                      fontSize: 11, color: Color(0xFF0F6E56)),
                                 ),
                               ),
                             ],
@@ -585,12 +615,14 @@ class _CounselorScreenState extends State<CounselorScreen>
 
   void _confirmBooking(Map<String, dynamic> counselor) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    
+
     // Determine student name based on anonymous mode
     String bookingName;
     if (_isAnonymousMode) {
       // Generate anonymous username with random number
-      final randomNum = (DateTime.now().millisecondsSinceEpoch % 10000).toString().padLeft(4, '0');
+      final randomNum = (DateTime.now().millisecondsSinceEpoch % 10000)
+          .toString()
+          .padLeft(4, '0');
       bookingName = "Anonymous User #$randomNum";
     } else {
       bookingName = userProvider.fullName;
@@ -605,7 +637,9 @@ class _CounselorScreenState extends State<CounselorScreen>
       time: _selectedTimeSlot!,
       reason: _selectedReason!,
     );
-    
+
+    if (!mounted) return;
+
     // Show loading animation
     showDialog(
       context: context,
@@ -629,7 +663,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                     width: 70,
                     height: 70,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1D9E75).withOpacity(0.1),
+                      color: const Color(0xFF1D9E75).withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: AnimatedBuilder(
@@ -709,7 +743,8 @@ class _CounselorScreenState extends State<CounselorScreen>
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Your counseling session has been booked with ${counselor["name"]}."),
+            Text(
+                "Your counseling session has been booked with ${counselor["name"]}."),
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.all(10),
@@ -722,7 +757,8 @@ class _CounselorScreenState extends State<CounselorScreen>
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.calendar_today, size: 14, color: Color(0xFF1D9E75)),
+                      const Icon(Icons.calendar_today,
+                          size: 14, color: Color(0xFF1D9E75)),
                       const SizedBox(width: 6),
                       Text(
                         "Date: ${DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate)}",
@@ -733,17 +769,21 @@ class _CounselorScreenState extends State<CounselorScreen>
                   const SizedBox(height: 6),
                   Row(
                     children: [
-                      const Icon(Icons.access_time, size: 14, color: Color(0xFF1D9E75)),
+                      const Icon(Icons.access_time,
+                          size: 14, color: Color(0xFF1D9E75)),
                       const SizedBox(width: 6),
-                      Text("Time: $_selectedTimeSlot", style: const TextStyle(fontSize: 12)),
+                      Text("Time: $_selectedTimeSlot",
+                          style: const TextStyle(fontSize: 12)),
                     ],
                   ),
                   const SizedBox(height: 6),
                   Row(
                     children: [
-                      const Icon(Icons.info_outline, size: 14, color: Color(0xFF1D9E75)),
+                      const Icon(Icons.info_outline,
+                          size: 14, color: Color(0xFF1D9E75)),
                       const SizedBox(width: 6),
-                      Text("Reason: $_selectedReason", style: const TextStyle(fontSize: 12)),
+                      Text("Reason: $_selectedReason",
+                          style: const TextStyle(fontSize: 12)),
                     ],
                   ),
                 ],
@@ -759,14 +799,16 @@ class _CounselorScreenState extends State<CounselorScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("OK", style: TextStyle(fontSize: 13, color: Color(0xFF1D9E75))),
+            child: const Text("OK",
+                style: TextStyle(fontSize: 13, color: Color(0xFF1D9E75))),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               _showBookingsList();
             },
-            child: const Text("View My Bookings", style: TextStyle(fontSize: 13, color: Color(0xFF1D9E75))),
+            child: const Text("View My Bookings",
+                style: TextStyle(fontSize: 13, color: Color(0xFF1D9E75))),
           ),
         ],
       ),
@@ -821,7 +863,8 @@ class _CounselorScreenState extends State<CounselorScreen>
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: BookingStorage.bookings.length,
                   itemBuilder: (context, index) {
-                    final booking = BookingStorage.bookings.reversed.toList()[index];
+                    final booking =
+                        BookingStorage.bookings.reversed.toList()[index];
                     return Container(
                       margin: const EdgeInsets.only(bottom: 10),
                       padding: const EdgeInsets.all(14),
@@ -831,7 +874,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                         border: Border.all(color: Colors.grey.shade200),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.05),
+                            color: Colors.grey.withValues(alpha: 0.05),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -845,10 +888,12 @@ class _CounselorScreenState extends State<CounselorScreen>
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF1D9E75).withOpacity(0.1),
+                                  color: const Color(0xFF1D9E75)
+                                      .withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: const Icon(Icons.psychology, color: Color(0xFF1D9E75), size: 18),
+                                child: const Icon(Icons.psychology,
+                                    color: Color(0xFF1D9E75), size: 18),
                               ),
                               const SizedBox(width: 10),
                               Expanded(
@@ -864,13 +909,16 @@ class _CounselorScreenState extends State<CounselorScreen>
                                     ),
                                     Text(
                                       booking.reason,
-                                      style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.grey[600]),
                                     ),
                                   ],
                                 ),
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: booking.status == "Pending"
                                       ? const Color(0xFFFFF3E0)
@@ -893,25 +941,31 @@ class _CounselorScreenState extends State<CounselorScreen>
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              const Icon(Icons.calendar_today, size: 12, color: Colors.grey),
+                              const Icon(Icons.calendar_today,
+                                  size: 12, color: Colors.grey),
                               const SizedBox(width: 4),
                               Text(
-                                DateFormat('MMM dd, yyyy').format(DateTime.parse(booking.date)),
-                                style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                                DateFormat('MMM dd, yyyy')
+                                    .format(DateTime.parse(booking.date)),
+                                style: TextStyle(
+                                    fontSize: 11, color: Colors.grey[600]),
                               ),
                               const SizedBox(width: 12),
-                              const Icon(Icons.access_time, size: 12, color: Colors.grey),
+                              const Icon(Icons.access_time,
+                                  size: 12, color: Colors.grey),
                               const SizedBox(width: 4),
                               Text(
                                 booking.time,
-                                style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                                style: TextStyle(
+                                    fontSize: 11, color: Colors.grey[600]),
                               ),
                             ],
                           ),
                           const SizedBox(height: 6),
                           Text(
                             "Booked on: ${DateFormat('MMM dd, yyyy').format(booking.bookingDate)}",
-                            style: TextStyle(fontSize: 9, color: Colors.grey[400]),
+                            style:
+                                TextStyle(fontSize: 9, color: Colors.grey[400]),
                           ),
                         ],
                       ),
@@ -933,7 +987,10 @@ class _CounselorScreenState extends State<CounselorScreen>
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text("Counselor Support",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16)),
         backgroundColor: const Color(0xFF1D9E75),
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
@@ -971,14 +1028,14 @@ class _CounselorScreenState extends State<CounselorScreen>
                 ),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                    color: const Color(0xFF1D9E75).withOpacity(0.2)),
+                    color: const Color(0xFF1D9E75).withValues(alpha: 0.2)),
               ),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1D9E75).withOpacity(0.2),
+                      color: const Color(0xFF1D9E75).withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(Icons.security,
@@ -996,7 +1053,7 @@ class _CounselorScreenState extends State<CounselorScreen>
               ),
             ),
             const SizedBox(height: 20),
-            
+
             // Stats Row
             Row(
               children: [
@@ -1023,17 +1080,17 @@ class _CounselorScreenState extends State<CounselorScreen>
               ],
             ),
             const SizedBox(height: 20),
-            
+
             const Text("Available Counselors",
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87)),
             const SizedBox(height: 12),
-            ..._counselors.asMap().entries.map((entry) =>
-                _counselorCard(context, entry.value, entry.key)),
+            ..._counselors.asMap().entries.map(
+                (entry) => _counselorCard(context, entry.value, entry.key)),
             const SizedBox(height: 20),
-            
+
             // Emergency Contact
             Container(
               width: double.infinity,
@@ -1049,7 +1106,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                 ),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                    color: const Color(0xFFE24B4A).withOpacity(0.3)),
+                    color: const Color(0xFFE24B4A).withValues(alpha: 0.3)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1059,7 +1116,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE24B4A).withOpacity(0.2),
+                          color: const Color(0xFFE24B4A).withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.phone,
@@ -1125,7 +1182,8 @@ class _CounselorScreenState extends State<CounselorScreen>
                           ),
                         );
                       },
-                      icon: const Icon(Icons.call, color: Colors.white, size: 16),
+                      icon:
+                          const Icon(Icons.call, color: Colors.white, size: 16),
                       label: const Text("Call Now",
                           style: TextStyle(
                               color: Colors.white,
@@ -1156,7 +1214,7 @@ class _CounselorScreenState extends State<CounselorScreen>
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -1167,7 +1225,7 @@ class _CounselorScreenState extends State<CounselorScreen>
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: color, size: 18),
@@ -1200,7 +1258,8 @@ class _CounselorScreenState extends State<CounselorScreen>
     final upcoming = BookingStorage.bookings.where((booking) {
       try {
         final bookingDate = DateTime.parse(booking.date);
-        return bookingDate.isAfter(today) || bookingDate.isAtSameMomentAs(today);
+        return bookingDate.isAfter(today) ||
+            bookingDate.isAtSameMomentAs(today);
       } catch (e) {
         return false;
       }
@@ -1209,9 +1268,10 @@ class _CounselorScreenState extends State<CounselorScreen>
   }
 
   String _getCompletedBookings() {
-    final completed = BookingStorage.bookings.where((booking) => 
-      booking.status == "Confirmed" || booking.status == "Completed"
-    ).length;
+    final completed = BookingStorage.bookings
+        .where((booking) =>
+            booking.status == "Confirmed" || booking.status == "Completed")
+        .length;
     return completed.toString();
   }
 
@@ -1247,7 +1307,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF1D9E75).withOpacity(0.1),
+                    color: const Color(0xFF1D9E75).withValues(alpha: 0.1),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
                   ),
@@ -1277,7 +1337,8 @@ class _CounselorScreenState extends State<CounselorScreen>
                                     end: Alignment.bottomRight,
                                     colors: [
                                       const Color(0xFFE8F8F2),
-                                      const Color(0xFF1D9E75).withOpacity(0.3),
+                                      const Color(0xFF1D9E75)
+                                          .withValues(alpha: 0.3),
                                     ],
                                   ),
                                   shape: BoxShape.circle,
@@ -1285,13 +1346,15 @@ class _CounselorScreenState extends State<CounselorScreen>
                                       ? [
                                           BoxShadow(
                                             color: const Color(0xFF1D9E75)
-                                                .withOpacity(0.2 +
-                                                    (_pulseController.value *
-                                                        0.3)),
+                                                .withValues(
+                                                    alpha: 0.2 +
+                                                        (_pulseController
+                                                                .value *
+                                                            0.3)),
                                             blurRadius: 8 +
                                                 (_pulseController.value * 6),
-                                            spreadRadius:
-                                                1 + (_pulseController.value * 1),
+                                            spreadRadius: 1 +
+                                                (_pulseController.value * 1),
                                           ),
                                         ]
                                       : null,
@@ -1401,7 +1464,8 @@ class _CounselorScreenState extends State<CounselorScreen>
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     AnimatedContainer(
-                                      duration: const Duration(milliseconds: 500),
+                                      duration:
+                                          const Duration(milliseconds: 500),
                                       width: 6,
                                       height: 6,
                                       decoration: BoxDecoration(
@@ -1413,7 +1477,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                                             ? [
                                                 BoxShadow(
                                                   color: const Color(0xFF4CAF50)
-                                                      .withOpacity(0.5),
+                                                      .withValues(alpha: 0.5),
                                                   blurRadius: 3,
                                                   spreadRadius: 1,
                                                 ),
@@ -1545,7 +1609,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                           end: Alignment.bottomRight,
                           colors: [
                             const Color(0xFFE8F8F2),
-                            const Color(0xFF1D9E75).withOpacity(0.3),
+                            const Color(0xFF1D9E75).withValues(alpha: 0.3),
                           ],
                         ),
                         shape: BoxShape.circle,
@@ -1610,17 +1674,19 @@ class _CounselorScreenState extends State<CounselorScreen>
                       ),
                       child: Column(
                         children: [
-                          _buildDetailRow(
-                              Icons.psychology, "Specialty", counselor["specialty"]),
+                          _buildDetailRow(Icons.psychology, "Specialty",
+                              counselor["specialty"]),
                           const Divider(height: 20),
                           _buildDetailRow(Icons.people, "Sessions Completed",
                               "${counselor["sessions"] ?? 0}+"),
                           const Divider(height: 20),
-                          _buildDetailRow(Icons.email, "Email", counselor["email"] ?? "N/A"),
+                          _buildDetailRow(Icons.email, "Email",
+                              counselor["email"] ?? "N/A"),
                           const Divider(height: 20),
-                          _buildDetailRow(Icons.work, "Experience", counselor["experience"] ?? "N/A"),
+                          _buildDetailRow(Icons.work, "Experience",
+                              counselor["experience"] ?? "N/A"),
                           const Divider(height: 20),
-                          _buildDetailRow(Icons.language, "Languages", 
+                          _buildDetailRow(Icons.language, "Languages",
                               (counselor["languages"] as List).join(", ")),
                           const Divider(height: 20),
                           _buildDetailRow(
@@ -1682,7 +1748,7 @@ class _CounselorScreenState extends State<CounselorScreen>
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: const Color(0xFF1D9E75).withOpacity(0.1),
+            color: const Color(0xFF1D9E75).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: const Color(0xFF1D9E75), size: 16),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/firestore_service.dart';
@@ -136,17 +136,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: isNew ? const Color(0xFF1D9E75).withOpacity(0.1) : Theme.of(context).cardColor,
+                        color: isNew ? const Color(0xFF1D9E75).withValues(alpha: 0.1) : Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withValues(alpha: 0.05),
                             blurRadius: 10,
                             offset: const Offset(0, 2),
                           ),
                         ],
                         border: isNew
-                            ? Border.all(color: const Color(0xFF1D9E75).withOpacity(0.3), width: 1.5)
+                            ? Border.all(color: const Color(0xFF1D9E75).withValues(alpha: 0.3), width: 1.5)
                             : null,
                       ),
                       child: Row(
@@ -155,7 +155,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: color.withOpacity(0.15),
+                              color: color.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(icon, color: color, size: 22),

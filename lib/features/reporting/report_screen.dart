@@ -75,9 +75,11 @@ class _ReportScreenState extends State<ReportScreen>
       if (permission == LocationPermission.whileInUse ||
           permission == LocationPermission.always) {
         Position position = await Geolocator.getCurrentPosition();
-        setState(() {
-          currentLatLng = LatLng(position.latitude, position.longitude);
-        });
+        if (mounted) {
+          setState(() {
+            currentLatLng = LatLng(position.latitude, position.longitude);
+          });
+        }
       }
     } catch (e) {
       debugPrint("Error getting location: $e");

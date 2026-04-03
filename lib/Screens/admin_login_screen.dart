@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AdminDashboard extends StatefulWidget {
@@ -8,10 +8,11 @@ class AdminDashboard extends StatefulWidget {
   State<AdminDashboard> createState() => _AdminDashboardState();
 }
 
-class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStateMixin {
+class _AdminDashboardState extends State<AdminDashboard>
+    with TickerProviderStateMixin {
   int _selectedIndex = 0;
   late AnimationController _animationController;
-  
+
   // Stats data
   final Map<String, dynamic> _stats = {
     'totalReports': 156,
@@ -23,7 +24,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
     'avgResponseTime': '2.4 min',
     'safetyScore': 85,
   };
-  
+
   // Recent reports
   final List<Map<String, dynamic>> _recentReports = [
     {
@@ -67,7 +68,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
       'reportedBy': 'IT23318756',
     },
   ];
-  
+
   // Counselor bookings
   final List<Map<String, dynamic>> _recentBookings = [
     {
@@ -144,7 +145,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
+                  color: Colors.grey.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
@@ -214,7 +215,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
               ],
             ),
           ),
-          
+
           // Tab Bar
           Container(
             margin: const EdgeInsets.all(16),
@@ -223,7 +224,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
+                  color: Colors.grey.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -237,7 +238,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
               ],
             ),
           ),
-          
+
           // Content based on selected tab
           Expanded(
             child: IndexedStack(
@@ -264,7 +265,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -310,7 +311,9 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF1D9E75).withOpacity(0.1) : Colors.transparent,
+            color: isSelected
+                ? const Color(0xFF1D9E75).withValues(alpha: 0.1)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -351,7 +354,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.05),
+                color: Colors.grey.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
@@ -365,7 +368,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(report['status']).withOpacity(0.1),
+                      color: _getStatusColor(report['status'])
+                          .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
@@ -397,9 +401,11 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(report['status']).withOpacity(0.1),
+                      color: _getStatusColor(report['status'])
+                          .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -416,7 +422,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
               const SizedBox(height: 12),
               Row(
                 children: [
-                  const Icon(Icons.person_outline, size: 12, color: Colors.grey),
+                  const Icon(Icons.person_outline,
+                      size: 12, color: Colors.grey),
                   const SizedBox(width: 4),
                   Text(
                     report['reportedBy'],
@@ -453,7 +460,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1D9E75),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -486,7 +494,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.05),
+                color: Colors.grey.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
@@ -500,7 +508,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1D9E75).withOpacity(0.1),
+                      color: const Color(0xFF1D9E75).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(
@@ -532,11 +540,12 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: booking['status'] == 'Confirmed'
-                          ? const Color(0xFF4CAF50).withOpacity(0.1)
-                          : const Color(0xFFFF9800).withOpacity(0.1),
+                          ? const Color(0xFF4CAF50).withValues(alpha: 0.1)
+                          : const Color(0xFFFF9800).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -555,7 +564,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
               const SizedBox(height: 12),
               Row(
                 children: [
-                  const Icon(Icons.calendar_today, size: 12, color: Colors.grey),
+                  const Icon(Icons.calendar_today,
+                      size: 12, color: Colors.grey),
                   const SizedBox(width: 4),
                   Text(
                     DateFormat('MMM dd, yyyy').format(booking['date']),
@@ -581,7 +591,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1D9E75),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -685,7 +696,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
             const SizedBox(height: 8),
             _buildDetailRow('Reported By', report['reportedBy']),
             const SizedBox(height: 8),
-            _buildDetailRow('Date', DateFormat('MMM dd, yyyy hh:mm a').format(report['date'])),
+            _buildDetailRow('Date',
+                DateFormat('MMM dd, yyyy hh:mm a').format(report['date'])),
             const SizedBox(height: 8),
             _buildDetailRow('Status', report['status']),
             const SizedBox(height: 12),
@@ -739,33 +751,41 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
           children: [
             const Text('Select a counselor to assign this report:'),
             const SizedBox(height: 16),
-            const ListTile(
-              leading: CircleAvatar(
+            ListTile(
+              leading: const CircleAvatar(
                 backgroundColor: Color(0xFF1D9E75),
                 child: Icon(Icons.person, color: Colors.white, size: 18),
               ),
-              title: Text('Dr. Priya Mendis'),
-              subtitle: Text('Senior Counselor'),
-              trailing: Radio<bool>(
-                value: true,
-                groupValue: true,
-                onChanged: null,
-                activeColor: Color(0xFF1D9E75),
+              title: const Text('Dr. Priya Mendis'),
+              subtitle: const Text('Senior Counselor'),
+              trailing: Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFF1D9E75), width: 2),
+                  color: const Color(0xFF1D9E75),
+                ),
+                child: const Icon(Icons.check, color: Colors.white, size: 16),
               ),
+              onTap: () {},
             ),
-            const ListTile(
-              leading: CircleAvatar(
+            ListTile(
+              leading: const CircleAvatar(
                 backgroundColor: Color(0xFF1D9E75),
                 child: Icon(Icons.person, color: Colors.white, size: 18),
               ),
-              title: Text('Mr. Kasun Fernando'),
-              subtitle: Text('Student Welfare Officer'),
-              trailing: Radio<bool>(
-                value: false,
-                groupValue: true,
-                onChanged: null,
-                activeColor: Color(0xFF1D9E75),
+              title: const Text('Mr. Kasun Fernando'),
+              subtitle: const Text('Student Welfare Officer'),
+              trailing: Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFF1D9E75), width: 2),
+                ),
               ),
+              onTap: () {},
             ),
           ],
         ),
@@ -801,7 +821,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text('Confirm Booking'),
-        content: Text('Confirm booking for ${booking['student']} with ${booking['counselor']} on ${DateFormat('MMM dd, yyyy').format(booking['date'])} at ${booking['time']}?'),
+        content: Text(
+            'Confirm booking for ${booking['student']} with ${booking['counselor']} on ${DateFormat('MMM dd, yyyy').format(booking['date'])} at ${booking['time']}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -858,7 +879,8 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
               ),
               const Divider(),
               ListTile(
-                leading: const Icon(Icons.verified_user, color: Color(0xFF4CAF50)),
+                leading:
+                    const Icon(Icons.verified_user, color: Color(0xFF4CAF50)),
                 title: const Text('View All Users'),
                 onTap: () {
                   Navigator.pop(context);
@@ -1002,7 +1024,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                   child: Icon(Icons.person, color: Colors.white, size: 18),
                 ),
                 title: Text('Tharani Bandara'),
-                subtitle: Text('IT23318748 • Active'),
+                subtitle: Text('IT23318748 â€¢ Active'),
               ),
               const Divider(),
               const ListTile(
@@ -1011,7 +1033,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                   child: Icon(Icons.person, color: Colors.white, size: 18),
                 ),
                 title: Text('Kavindu Perera'),
-                subtitle: Text('IT23319234 • Active'),
+                subtitle: Text('IT23319234 â€¢ Active'),
               ),
               const Divider(),
               const ListTile(
@@ -1020,7 +1042,7 @@ class _AdminDashboardState extends State<AdminDashboard> with TickerProviderStat
                   child: Icon(Icons.person, color: Colors.white, size: 18),
                 ),
                 title: Text('Nimali Silva'),
-                subtitle: Text('IT23318892 • Active'),
+                subtitle: Text('IT23318892 â€¢ Active'),
               ),
             ],
           ),

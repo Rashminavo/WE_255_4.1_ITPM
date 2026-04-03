@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math' as math;
 import 'onboarding_screen.dart';
@@ -201,13 +201,13 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                                     shape: BoxShape.circle,
                                     gradient: RadialGradient(
                                       colors: [
-                                        Colors.white.withOpacity(0.3),
-                                        Colors.white.withOpacity(0.1),
+                                        Colors.white.withValues(alpha: 0.3),
+                                        Colors.white.withValues(alpha: 0.1),
                                       ],
                                     ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.white.withOpacity(0.4 * _pulseAnimation.value),
+                                        color: Colors.white.withValues(alpha: 0.4 * _pulseAnimation.value),
                                         blurRadius: 40,
                                         spreadRadius: 10,
                                       ),
@@ -216,10 +216,10 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                                   child: Container(
                                     padding: const EdgeInsets.all(20),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.2),
+                                      color: Colors.white.withValues(alpha: 0.2),
                                       shape: BoxShape.circle,
                                       border: Border.all(
-                                        color: Colors.white.withOpacity(0.3),
+                                        color: Colors.white.withValues(alpha: 0.3),
                                         width: 2,
                                       ),
                                     ),
@@ -266,7 +266,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.1),
+                                  color: Colors.white.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: const Text(
@@ -307,7 +307,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                     child: CircularProgressIndicator(
                       strokeWidth: 3,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.white.withOpacity(0.8),
+                        Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
                   ),
@@ -316,7 +316,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                     "Loading...",
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                       letterSpacing: 2,
                     ),
                   ),
@@ -343,7 +343,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -363,7 +363,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.08),
+                  color: Colors.white.withValues(alpha: 0.08),
                   width: 1,
                 ),
               ),
@@ -411,7 +411,7 @@ class ParticlePainter extends CustomPainter {
 
     for (var particle in particles) {
       particle.update();
-      paint.color = Colors.white.withOpacity(particle.opacity);
+      paint.color = Colors.white.withValues(alpha: particle.opacity);
       canvas.drawCircle(
         Offset(particle.x * size.width, particle.y * size.height),
         particle.size,

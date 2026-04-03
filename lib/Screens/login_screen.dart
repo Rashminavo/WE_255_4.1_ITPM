@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'main_navigation.dart';
 import 'register_screen.dart';
-import 'admin_dashboard.dart';  // Make sure this import is present
+import 'admin_dashboard.dart'; // Make sure this import is present
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,7 +11,8 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen>
+    with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final AuthService _authService = AuthService();
   final _emailController = TextEditingController();
@@ -37,7 +38,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic));
+    ).animate(CurvedAnimation(
+        parent: _animationController, curve: Curves.easeOutCubic));
     _animationController.forward();
   }
 
@@ -52,19 +54,21 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   Future<void> _loginUser() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
-      
+
       try {
         final email = _emailController.text.trim();
         final password = _passwordController.text;
         final user = await _authService.signIn(email, password);
-        
+
         if (mounted && user != null) {
           // Fetch Role
           String role = await _authService.getUserRole(user.uid);
 
+          if (!mounted) return;
+
           // Route based on role
-          if (role == 'admin' || 
-              email.toLowerCase() == 'admin@admin.com' || 
+          if (role == 'admin' ||
+              email.toLowerCase() == 'admin@admin.com' ||
               email.toLowerCase() == 'admin@ragsafe.com') {
             Navigator.pushReplacement(
               context,
@@ -113,10 +117,10 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
               ),
             ),
           ),
-          
+
           // Decorative circles
           ..._buildDecorativeCircles(),
-          
+
           SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -131,11 +135,12 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                         padding: const EdgeInsets.all(25),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.15),
-                          border: Border.all(color: Colors.white.withOpacity(0.2)),
+                          color: Colors.white.withValues(alpha: 0.15),
+                          border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.2)),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.white.withOpacity(0.1),
+                              color: Colors.white.withValues(alpha: 0.1),
                               blurRadius: 30,
                               spreadRadius: 5,
                             ),
@@ -144,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                         child: Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -183,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                     ),
                   ),
                   const SizedBox(height: 40),
-                  
+
                   // Glassmorphism Login Card
                   FadeTransition(
                     opacity: _fadeAnimation,
@@ -193,11 +198,11 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.95),
+                            color: Colors.white.withValues(alpha: 0.95),
                             borderRadius: BorderRadius.circular(28),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
+                                color: Colors.black.withValues(alpha: 0.2),
                                 blurRadius: 30,
                                 offset: const Offset(0, 15),
                               ),
@@ -206,21 +211,25 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(28),
                             child: BackdropFilter(
-                              filter: const ColorFilter.mode(Colors.transparent, BlendMode.srcOver),
+                              filter: const ColorFilter.mode(
+                                  Colors.transparent, BlendMode.srcOver),
                               child: Padding(
                                 padding: const EdgeInsets.all(28),
                                 child: Form(
                                   key: _formKey,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       Row(
                                         children: [
                                           Container(
                                             padding: const EdgeInsets.all(10),
                                             decoration: BoxDecoration(
-                                              color: const Color(0xFF1D9E75).withOpacity(0.1),
-                                              borderRadius: BorderRadius.circular(12),
+                                              color: const Color(0xFF1D9E75)
+                                                  .withValues(alpha: 0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
                                             child: const Icon(
                                               Icons.login_rounded,
@@ -248,14 +257,15 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                         ),
                                       ),
                                       const SizedBox(height: 28),
-                                      
+
                                       // Modern Email Field
                                       _buildModernTextField(
                                         controller: _emailController,
                                         label: "Email",
                                         hint: "Enter your email address",
                                         icon: Icons.email,
-                                        keyboardType: TextInputType.emailAddress,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
                                             return "Email is required";
@@ -267,7 +277,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                         },
                                       ),
                                       const SizedBox(height: 20),
-                                      
+
                                       // Modern Password Field
                                       _buildModernTextField(
                                         controller: _passwordController,
@@ -280,26 +290,30 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                                 ? "Password too short"
                                                 : null,
                                       ),
-                                      
+
                                       const SizedBox(height: 12),
                                       Align(
                                         alignment: Alignment.centerRight,
                                         child: TextButton(
                                           onPressed: () {},
                                           style: TextButton.styleFrom(
-                                            foregroundColor: const Color(0xFF1D9E75),
+                                            foregroundColor:
+                                                const Color(0xFF1D9E75),
                                             padding: EdgeInsets.zero,
                                             minimumSize: Size.zero,
-                                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                            tapTargetSize: MaterialTapTargetSize
+                                                .shrinkWrap,
                                           ),
                                           child: const Text(
                                             "Forgot Password?",
-                                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w500),
                                           ),
                                         ),
                                       ),
                                       const SizedBox(height: 24),
-                                      
+
                                       // Modern Sign In Button
                                       _isLoading
                                           ? const Center(
@@ -310,12 +324,19 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                           : Container(
                                               decoration: BoxDecoration(
                                                 gradient: const LinearGradient(
-                                                  colors: [Color(0xFF1D9E75), Color(0xFF0F6E56)],
+                                                  colors: [
+                                                    Color(0xFF1D9E75),
+                                                    Color(0xFF0F6E56)
+                                                  ],
                                                 ),
-                                                borderRadius: BorderRadius.circular(16),
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: const Color(0xFF1D9E75).withOpacity(0.4),
+                                                    color:
+                                                        const Color(0xFF1D9E75)
+                                                            .withValues(
+                                                                alpha: 0.4),
                                                     blurRadius: 15,
                                                     offset: const Offset(0, 6),
                                                   ),
@@ -324,32 +345,41 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                               child: ElevatedButton(
                                                 onPressed: _loginUser,
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.transparent,
+                                                  backgroundColor:
+                                                      Colors.transparent,
                                                   foregroundColor: Colors.white,
                                                   elevation: 0,
-                                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 16),
                                                   shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(16),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            16),
                                                   ),
                                                 ),
                                                 child: const Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     Text(
                                                       "Sign In",
                                                       style: TextStyle(
                                                         fontSize: 16,
-                                                        fontWeight: FontWeight.w600,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                       ),
                                                     ),
                                                     SizedBox(width: 8),
-                                                    Icon(Icons.arrow_forward_rounded, size: 18),
+                                                    Icon(
+                                                        Icons
+                                                            .arrow_forward_rounded,
+                                                        size: 18),
                                                   ],
                                                 ),
                                               ),
                                             ),
                                       const SizedBox(height: 24),
-                                      
+
                                       // Divider
                                       Row(
                                         children: [
@@ -360,7 +390,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16),
                                             child: Text(
                                               "or",
                                               style: TextStyle(
@@ -378,21 +409,26 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                                         ],
                                       ),
                                       const SizedBox(height: 20),
-                                      
+
                                       // Create Account Button
                                       OutlinedButton(
                                         onPressed: () => Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => const RegisterScreen(),
+                                            builder: (context) =>
+                                                const RegisterScreen(),
                                           ),
                                         ),
                                         style: OutlinedButton.styleFrom(
-                                          foregroundColor: const Color(0xFF1D9E75),
-                                          side: const BorderSide(color: Color(0xFF1D9E75)),
-                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          foregroundColor:
+                                              const Color(0xFF1D9E75),
+                                          side: const BorderSide(
+                                              color: Color(0xFF1D9E75)),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 14),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(14),
+                                            borderRadius:
+                                                BorderRadius.circular(14),
                                           ),
                                         ),
                                         child: const Text(
@@ -433,7 +469,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
           height: 200,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
           ),
         ),
       ),
@@ -445,7 +481,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
           height: 150,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white.withOpacity(0.03),
+            color: Colors.white.withValues(alpha: 0.03),
           ),
         ),
       ),
@@ -492,15 +528,19 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
               suffixIcon: isPassword
                   ? IconButton(
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                        _obscurePassword
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
                         color: Colors.grey.shade400,
                         size: 20,
                       ),
-                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
                     )
                   : null,
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             ),
           ),
         ),

@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // When your counselor/booking page is ready, import it here:
 // import 'counselor_booking_page.dart';
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
@@ -22,34 +22,34 @@ class _QuizScreenState extends State<QuizScreen>
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
 
-  // ── Mental Health Assessment Questions ───────────────────────
-  // Each question has 4 options scored 0–3:
+  // â”€â”€ Mental Health Assessment Questions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // Each question has 4 options scored 0â€“3:
   //   0 = healthiest / most aware response
   //   3 = most distressed / least aware response
   //
-  // Total score range: 0 – 30
-  //   0–9   → Mentally healthy, good awareness
-  //   10–18 → Mild concern, counseling suggested
-  //   19–30 → High concern, counseling strongly recommended
-  // ────────────────────────────────────────────────────────────
+  // Total score range: 0 â€“ 30
+  //   0â€“9   â†’ Mentally healthy, good awareness
+  //   10â€“18 â†’ Mild concern, counseling suggested
+  //   19â€“30 â†’ High concern, counseling strongly recommended
+  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   static const List<Map<String, dynamic>> _questions = [
     {
       'question':
           'How often do you feel stressed or overwhelmed by situations on campus?',
       'category': 'Stress',
-      'icon': '😰',
+      'icon': 'ðŸ˜°',
       'options': [
         {'text': 'Rarely or never', 'score': 0},
         {'text': 'Sometimes, but I manage it well', 'score': 1},
         {'text': 'Often, and it\'s hard to cope', 'score': 2},
-        {'text': 'Almost always — I feel constantly overwhelmed', 'score': 3},
+        {'text': 'Almost always â€” I feel constantly overwhelmed', 'score': 3},
       ],
     },
     {
       'question':
           'Have you ever felt pressured, humiliated, or forced to do something against your will by seniors or peers?',
       'category': 'Ragging Experience',
-      'icon': '😔',
+      'icon': 'ðŸ˜”',
       'options': [
         {'text': 'No, never', 'score': 0},
         {'text': 'Once or twice, but it was minor', 'score': 1},
@@ -60,7 +60,7 @@ class _QuizScreenState extends State<QuizScreen>
     {
       'question': 'How would you describe your sleep patterns recently?',
       'category': 'Sleep & Rest',
-      'icon': '😴',
+      'icon': 'ðŸ˜´',
       'options': [
         {'text': 'I sleep well and feel rested', 'score': 0},
         {'text': 'Occasionally disrupted but mostly fine', 'score': 1},
@@ -78,7 +78,7 @@ class _QuizScreenState extends State<QuizScreen>
       'question':
           'When something difficult happens to you on campus, what do you typically do?',
       'category': 'Coping Skills',
-      'icon': '🤔',
+      'icon': 'ðŸ¤”',
       'options': [
         {'text': 'Talk to someone I trust and find a solution', 'score': 0},
         {
@@ -93,20 +93,20 @@ class _QuizScreenState extends State<QuizScreen>
       'question':
           'How comfortable do you feel speaking up or reporting if someone treats you unfairly?',
       'category': 'Confidence & Voice',
-      'icon': '🗣️',
+      'icon': 'ðŸ—£ï¸',
       'options': [
         {
-          'text': 'Very comfortable — I know my rights and how to report',
+          'text': 'Very comfortable â€” I know my rights and how to report',
           'score': 0
         },
         {'text': 'Somewhat comfortable, though a little hesitant', 'score': 1},
         {
-          'text': 'Uncomfortable — I worry about consequences if I speak up',
+          'text': 'Uncomfortable â€” I worry about consequences if I speak up',
           'score': 2
         },
         {
           'text':
-              'Very uncomfortable — I feel too scared or ashamed to say anything',
+              'Very uncomfortable â€” I feel too scared or ashamed to say anything',
           'score': 3
         },
       ],
@@ -114,7 +114,7 @@ class _QuizScreenState extends State<QuizScreen>
     {
       'question': 'How do you feel about your social connections on campus?',
       'category': 'Social Support',
-      'icon': '👥',
+      'icon': 'ðŸ‘¥',
       'options': [
         {
           'text': 'I have a strong support network of friends and mentors',
@@ -129,7 +129,7 @@ class _QuizScreenState extends State<QuizScreen>
       'question':
           'In the past few weeks, have you felt sad, hopeless, or lost interest in things you usually enjoy?',
       'category': 'Emotional Well-being',
-      'icon': '💭',
+      'icon': 'ðŸ’­',
       'options': [
         {'text': 'No, I\'ve generally felt positive and engaged', 'score': 0},
         {'text': 'Occasionally, but it passes quickly', 'score': 1},
@@ -141,10 +141,10 @@ class _QuizScreenState extends State<QuizScreen>
       'question':
           'How well do you feel you can focus on your studies or daily responsibilities?',
       'category': 'Focus & Productivity',
-      'icon': '📚',
+      'icon': 'ðŸ“š',
       'options': [
         {
-          'text': 'Very well — I stay on track without much difficulty',
+          'text': 'Very well â€” I stay on track without much difficulty',
           'score': 0
         },
         {'text': 'Fairly well, with occasional distractions', 'score': 1},
@@ -153,7 +153,7 @@ class _QuizScreenState extends State<QuizScreen>
           'score': 2
         },
         {
-          'text': 'I can\'t focus at all — everything feels pointless',
+          'text': 'I can\'t focus at all â€” everything feels pointless',
           'score': 3
         },
       ],
@@ -162,7 +162,7 @@ class _QuizScreenState extends State<QuizScreen>
       'question':
           'Have you ever witnessed ragging or bullying happening to someone else and felt unsure what to do?',
       'category': 'Bystander Awareness',
-      'icon': '👀',
+      'icon': 'ðŸ‘€',
       'options': [
         {'text': 'No, and I know exactly what to do if I ever do', 'score': 0},
         {'text': 'Yes, and I did try to help or report it', 'score': 1},
@@ -174,12 +174,12 @@ class _QuizScreenState extends State<QuizScreen>
       'question':
           'How do you feel about your overall mental well-being right now?',
       'category': 'Overall Well-being',
-      'icon': '🧠',
+      'icon': 'ðŸ§ ',
       'options': [
-        {'text': 'Good — I feel mentally strong and balanced', 'score': 0},
-        {'text': 'Okay — there are challenges but I\'m managing', 'score': 1},
-        {'text': 'Not great — I often feel mentally drained', 'score': 2},
-        {'text': 'Poor — I feel like I\'m really struggling', 'score': 3},
+        {'text': 'Good â€” I feel mentally strong and balanced', 'score': 0},
+        {'text': 'Okay â€” there are challenges but I\'m managing', 'score': 1},
+        {'text': 'Not great â€” I often feel mentally drained', 'score': 2},
+        {'text': 'Poor â€” I feel like I\'m really struggling', 'score': 3},
       ],
     },
   ];
@@ -288,7 +288,7 @@ class _QuizScreenState extends State<QuizScreen>
     _animController.forward();
   }
 
-  // ── Counselor Alert Dialog ───────────────────────────────────
+  // â”€â”€ Counselor Alert Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   void _showCounselorAlert(_QuizResult result) {
     final bool isUrgent = result == _QuizResult.highConcern;
 
@@ -308,8 +308,8 @@ class _QuizScreenState extends State<QuizScreen>
                 height: 80,
                 decoration: BoxDecoration(
                   color: isUrgent
-                      ? AppColors.danger.withOpacity(0.1)
-                      : AppColors.warning.withOpacity(0.1),
+                      ? AppColors.danger.withValues(alpha: 0.1)
+                      : AppColors.warning.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -343,8 +343,8 @@ class _QuizScreenState extends State<QuizScreen>
                 width: 50,
                 decoration: BoxDecoration(
                   color: isUrgent
-                      ? AppColors.danger.withOpacity(0.3)
-                      : AppColors.warning.withOpacity(0.3),
+                      ? AppColors.danger.withValues(alpha: 0.3)
+                      : AppColors.warning.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -353,7 +353,7 @@ class _QuizScreenState extends State<QuizScreen>
               // Body text
               Text(
                 isUrgent
-                    ? 'Your responses indicate you may be experiencing significant emotional distress. Speaking with a professional counselor can make a real difference. You don\'t have to face this alone — support is available for you.'
+                    ? 'Your responses indicate you may be experiencing significant emotional distress. Speaking with a professional counselor can make a real difference. You don\'t have to face this alone â€” support is available for you.'
                     : 'Your responses suggest some emotional challenges that could benefit from professional guidance. A counseling session is a safe space to talk through what you\'re feeling and get the support you deserve.',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
@@ -402,14 +402,14 @@ class _QuizScreenState extends State<QuizScreen>
                 child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.pop(ctx);
-                    // ── Navigate to your counselor booking page ──
+                    // â”€â”€ Navigate to your counselor booking page â”€â”€
                     // Navigator.push(
                     //   context,
                     //   MaterialPageRoute(
                     //     builder: (_) => const CounselorBookingPage(),
                     //   ),
                     // );
-                    // ────────────────────────────────────────────
+                    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: AppColors.darkGreen,
@@ -512,7 +512,7 @@ class _QuizScreenState extends State<QuizScreen>
               child: Text(
                 '${_currentIndex + 1} / ${_questions.length}',
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.85),
+                  color: Colors.white.withValues(alpha: 0.85),
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
                 ),
@@ -525,7 +525,7 @@ class _QuizScreenState extends State<QuizScreen>
     );
   }
 
-  // ── Quiz Screen ──────────────────────────────────────────────
+  // â”€â”€ Quiz Screen â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _buildQuizScreen() {
     final q = _questions[_currentIndex];
     final options = q['options'] as List<Map<String, dynamic>>;
@@ -557,7 +557,7 @@ class _QuizScreenState extends State<QuizScreen>
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                     decoration: BoxDecoration(
-                      color: AppColors.darkGreen.withOpacity(0.1),
+                      color: AppColors.darkGreen.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -613,7 +613,7 @@ class _QuizScreenState extends State<QuizScreen>
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.04),
+                              color: Colors.black.withValues(alpha: 0.04),
                               blurRadius: 6,
                               offset: const Offset(0, 2),
                             ),
@@ -627,8 +627,8 @@ class _QuizScreenState extends State<QuizScreen>
                               height: 30,
                               decoration: BoxDecoration(
                                 color: isSelected
-                                    ? Colors.white.withOpacity(0.2)
-                                    : AppColors.darkGreen.withOpacity(0.08),
+                                    ? Colors.white.withValues(alpha: 0.2)
+                                    : AppColors.darkGreen.withValues(alpha: 0.08),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Center(
@@ -705,7 +705,7 @@ class _QuizScreenState extends State<QuizScreen>
                           ),
                           child: Text(
                             _currentIndex < _questions.length - 1
-                                ? 'Next →'
+                                ? 'Next â†’'
                                 : 'See My Results',
                             style: const TextStyle(
                               fontWeight: FontWeight.w700,
@@ -726,7 +726,7 @@ class _QuizScreenState extends State<QuizScreen>
     );
   }
 
-  // ── Result Screen ────────────────────────────────────────────
+  // â”€â”€ Result Screen â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   Widget _buildResultScreen() {
     final result = _getResult();
     final score = _totalScore;
@@ -737,11 +737,11 @@ class _QuizScreenState extends State<QuizScreen>
         'icon': Icons.sentiment_very_satisfied_rounded,
         'color': Colors.green,
         'bgColor': const Color(0xFFE8F5E9),
-        'title': 'You\'re Doing Well! 🎉',
+        'title': 'You\'re Doing Well! ðŸŽ‰',
         'subtitle': 'Mentally Healthy',
         'message':
             'Your responses suggest you have a good level of mental well-being and awareness. You\'re managing stress well and have strong coping skills. Keep maintaining these healthy habits and continue supporting others around you.',
-        'tag': '✅ No Counseling Needed',
+        'tag': 'âœ… No Counseling Needed',
         'showBooking': false,
       },
       _QuizResult.mildConcern: {
@@ -751,8 +751,8 @@ class _QuizScreenState extends State<QuizScreen>
         'title': 'Some Areas to Work On',
         'subtitle': 'Mild Concern',
         'message':
-            'Your responses indicate some emotional challenges that could benefit from professional guidance. Talking to a counselor is a positive step — it\'s a safe, confidential space to share your feelings and get practical support.',
-        'tag': '💡 Counseling Suggested',
+            'Your responses indicate some emotional challenges that could benefit from professional guidance. Talking to a counselor is a positive step â€” it\'s a safe, confidential space to share your feelings and get practical support.',
+        'tag': 'ðŸ’¡ Counseling Suggested',
         'showBooking': true,
       },
       _QuizResult.highConcern: {
@@ -762,8 +762,8 @@ class _QuizScreenState extends State<QuizScreen>
         'title': 'You Deserve Support',
         'subtitle': 'High Concern',
         'message':
-            'Your responses suggest you may be experiencing significant distress. Please know that you\'re not alone, and help is available. We strongly encourage you to book a session with a counselor — they are here to support you without judgment.',
-        'tag': '⚠️ Counseling Strongly Recommended',
+            'Your responses suggest you may be experiencing significant distress. Please know that you\'re not alone, and help is available. We strongly encourage you to book a session with a counselor â€” they are here to support you without judgment.',
+        'tag': 'âš ï¸ Counseling Strongly Recommended',
         'showBooking': true,
       },
     };
@@ -805,9 +805,9 @@ class _QuizScreenState extends State<QuizScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: color.withOpacity(0.4)),
+              border: Border.all(color: color.withValues(alpha: 0.4)),
             ),
             child: Text(
               cfg['tag'] as String,
@@ -853,7 +853,7 @@ class _QuizScreenState extends State<QuizScreen>
                   borderRadius: BorderRadius.circular(8),
                   child: LinearProgressIndicator(
                     value: score / maxScore,
-                    backgroundColor: Colors.white.withOpacity(0.2),
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
                     valueColor: AlwaysStoppedAnimation<Color>(
                       score <= 9
                           ? Colors.green.shade300
@@ -868,13 +868,13 @@ class _QuizScreenState extends State<QuizScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('0 — Healthy',
+                    Text('0 â€” Healthy',
                         style: TextStyle(
-                            color: Colors.white.withOpacity(0.6),
+                            color: Colors.white.withValues(alpha: 0.6),
                             fontSize: 10)),
-                    Text('30 — High Concern',
+                    Text('30 â€” High Concern',
                         style: TextStyle(
-                            color: Colors.white.withOpacity(0.6),
+                            color: Colors.white.withValues(alpha: 0.6),
                             fontSize: 10)),
                   ],
                 ),
@@ -886,15 +886,15 @@ class _QuizScreenState extends State<QuizScreen>
           // Score legend
           Row(
             children: [
-              _ScoreBand(label: '0–9', desc: 'Healthy', color: Colors.green),
+              _ScoreBand(label: '0â€“9', desc: 'Healthy', color: Colors.green),
               const SizedBox(width: 8),
               _ScoreBand(
-                  label: '10–18',
+                  label: '10â€“18',
                   desc: 'Mild Concern',
                   color: AppColors.warning),
               const SizedBox(width: 8),
               _ScoreBand(
-                  label: '19–30',
+                  label: '19â€“30',
                   desc: 'High Concern',
                   color: AppColors.danger),
             ],
@@ -905,9 +905,9 @@ class _QuizScreenState extends State<QuizScreen>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.07),
+              color: color.withValues(alpha: 0.07),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: color.withOpacity(0.25)),
+              border: Border.all(color: color.withValues(alpha: 0.25)),
             ),
             child: Text(
               cfg['message'] as String,
@@ -970,7 +970,7 @@ class _QuizScreenState extends State<QuizScreen>
   }
 }
 
-// ── Score band widget ────────────────────────────────────────
+// â”€â”€ Score band widget â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 class _ScoreBand extends StatelessWidget {
   final String label;
   final String desc;
@@ -985,9 +985,9 @@ class _ScoreBand extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
@@ -1003,7 +1003,7 @@ class _ScoreBand extends StatelessWidget {
             Text(
               desc,
               style: TextStyle(
-                color: color.withOpacity(0.8),
+                color: color.withValues(alpha: 0.8),
                 fontSize: 10.5,
               ),
             ),
@@ -1014,5 +1014,6 @@ class _ScoreBand extends StatelessWidget {
   }
 }
 
-// ── Result levels ────────────────────────────────────────────
+// â”€â”€ Result levels â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 enum _QuizResult { healthy, mildConcern, highConcern }
+

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../services/booking_service.dart';
@@ -18,16 +18,22 @@ class _AdminDashboardState extends State<AdminDashboard>
   late AnimationController _slideController;
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
-  
+
   final BookingService _bookingService = BookingService();
-  
+
   String _searchQuery = '';
   bool _isLoading = true;
   int _selectedTab = 0; // 0: Bookings, 1: Analytics, 2: Counselors
   String _selectedStatusFilter = 'All';
-  
+
   final List<String> _tabs = ['Bookings', 'Analytics', 'Counselors'];
-  final List<String> _statusFilters = ['All', 'Pending', 'Confirmed', 'Completed', 'Cancelled'];
+  final List<String> _statusFilters = [
+    'All',
+    'Pending',
+    'Confirmed',
+    'Completed',
+    'Cancelled'
+  ];
 
   // Mock counselors data
   final List<Map<String, dynamic>> _counselors = const [
@@ -125,46 +131,48 @@ class _AdminDashboardState extends State<AdminDashboard>
         ),
       ];
     }
-    
-    return BookingStorage.bookings.map((booking) => {
-      'id': booking.id,
-      'studentName': booking.studentName,
-      'studentId': 'STU${booking.id.substring(2)}',
-      'counselor': booking.counselorName,
-      'date': booking.date,
-      'time': booking.time,
-      'reason': booking.reason,
-      'status': booking.status,
-      'email':
-          '${booking.studentName.toLowerCase().replaceAll(' ', '.')}@uni.ac.lk',
-      'phone':
-          '+94 77 ${1000000 + BookingStorage.bookings.indexOf(booking)}',
-    }).toList();
+
+    return BookingStorage.bookings
+        .map((booking) => {
+              'id': booking.id,
+              'studentName': booking.studentName,
+              'studentId': 'STU${booking.id.substring(2)}',
+              'counselor': booking.counselorName,
+              'date': booking.date,
+              'time': booking.time,
+              'reason': booking.reason,
+              'status': booking.status,
+              'email':
+                  '${booking.studentName.toLowerCase().replaceAll(' ', '.')}@uni.ac.lk',
+              'phone':
+                  '+94 77 ${1000000 + BookingStorage.bookings.indexOf(booking)}',
+            })
+        .toList();
   }
 
   @override
   void initState() {
     super.initState();
-    
+
     _pulseController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
     );
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _slideController.forward();
@@ -206,13 +214,13 @@ class _AdminDashboardState extends State<AdminDashboard>
 
   List<Map<String, dynamic>> getFilteredBookings() {
     var filtered = _bookings;
-    
+
     if (_selectedStatusFilter != 'All') {
       filtered = filtered.where((booking) {
         return booking['status'] == _selectedStatusFilter;
       }).toList();
     }
-    
+
     if (_searchQuery.isNotEmpty) {
       filtered = filtered.where((booking) {
         return booking['studentName']
@@ -229,11 +237,12 @@ class _AdminDashboardState extends State<AdminDashboard>
   Widget build(BuildContext context) {
     final filteredBookings = getFilteredBookings();
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       child: Scaffold(
-        backgroundColor: isDark ? const Color(0xFF0D1F1A) : const Color(0xFFF0F4F3),
+        backgroundColor:
+            isDark ? const Color(0xFF0D1F1A) : const Color(0xFFF0F4F3),
         body: _isLoading
             ? _buildLoadingScreen()
             : SafeArea(
@@ -277,7 +286,8 @@ class _AdminDashboardState extends State<AdminDashboard>
             AnimatedBuilder(
               animation: _pulseController,
               builder: (context, child) {
-                final scale = (1.0 + (_pulseController.value * 0.2)).clamp(0.0, 2.0);
+                final scale =
+                    (1.0 + (_pulseController.value * 0.2)).clamp(0.0, 2.0);
                 return Transform.scale(
                   scale: scale,
                   child: Container(
@@ -288,7 +298,7 @@ class _AdminDashboardState extends State<AdminDashboard>
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white.withValues(alpha: 0.5),
                           blurRadius: 30,
                           spreadRadius: 10,
                         ),
@@ -343,7 +353,7 @@ class _AdminDashboardState extends State<AdminDashboard>
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF1D9E75).withOpacity(0.3),
+                color: const Color(0xFF1D9E75).withValues(alpha: 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 5),
               ),
@@ -358,10 +368,10 @@ class _AdminDashboardState extends State<AdminDashboard>
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.white.withValues(alpha: 0.3),
                       ),
                     ),
                     child: const Icon(
@@ -388,7 +398,7 @@ class _AdminDashboardState extends State<AdminDashboard>
                           'Manage Counselor Bookings',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                           ),
                         ),
                       ],
@@ -412,7 +422,7 @@ class _AdminDashboardState extends State<AdminDashboard>
   Widget _buildActionButton(IconData icon, String tooltip, VoidCallback onTap) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: Colors.white.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(10),
       ),
       child: IconButton(
@@ -434,7 +444,9 @@ class _AdminDashboardState extends State<AdminDashboard>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: isDark ? Colors.black.withOpacity(0.2) : Colors.black.withOpacity(0.05),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.2)
+                : Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -452,17 +464,19 @@ class _AdminDashboardState extends State<AdminDashboard>
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: isSelected
-                      ? const Color(0xFF1D9E75)
-                      : Colors.transparent,
+                  color:
+                      isSelected ? const Color(0xFF1D9E75) : Colors.transparent,
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Text(
                   _tabs[index],
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: isSelected ? Colors.white : (isDark ? Colors.white70 : Colors.grey.shade600),
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    color: isSelected
+                        ? Colors.white
+                        : (isDark ? Colors.white70 : Colors.grey.shade600),
+                    fontWeight:
+                        isSelected ? FontWeight.w600 : FontWeight.normal,
                     fontSize: 13,
                   ),
                 ),
@@ -476,11 +490,15 @@ class _AdminDashboardState extends State<AdminDashboard>
 
   Widget _buildBookingsContent(List<Map<String, dynamic>> filteredBookings) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final pendingCount = _bookings.where((b) => b['status'] == 'Pending').length;
-    final confirmedCount = _bookings.where((b) => b['status'] == 'Confirmed').length;
-    final completedCount = _bookings.where((b) => b['status'] == 'Completed').length;
-    final cancelledCount = _bookings.where((b) => b['status'] == 'Cancelled').length;
-    
+    final pendingCount =
+        _bookings.where((b) => b['status'] == 'Pending').length;
+    final confirmedCount =
+        _bookings.where((b) => b['status'] == 'Confirmed').length;
+    final completedCount =
+        _bookings.where((b) => b['status'] == 'Completed').length;
+    final cancelledCount =
+        _bookings.where((b) => b['status'] == 'Cancelled').length;
+
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Column(
@@ -493,52 +511,62 @@ class _AdminDashboardState extends State<AdminDashboard>
               children: [
                 Row(
                   children: [
-                    Expanded(child: _buildStatCard(
+                    Expanded(
+                        child: _buildStatCard(
                       icon: Icons.calendar_today,
                       value: '${_bookings.length}',
                       label: 'Total',
                       color: const Color(0xFF1D9E75),
-                      onTap: () => setState(() => _selectedStatusFilter = 'All'),
+                      onTap: () =>
+                          setState(() => _selectedStatusFilter = 'All'),
                     )),
                     const SizedBox(width: 10),
-                    Expanded(child: _buildStatCard(
+                    Expanded(
+                        child: _buildStatCard(
                       icon: Icons.pending_actions,
                       value: '$pendingCount',
                       label: 'Pending',
                       color: Colors.orange,
-                      onTap: () => setState(() => _selectedStatusFilter = 'Pending'),
+                      onTap: () =>
+                          setState(() => _selectedStatusFilter = 'Pending'),
                     )),
                   ],
                 ),
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    Expanded(child: _buildStatCard(
+                    Expanded(
+                        child: _buildStatCard(
                       icon: Icons.check_circle,
                       value: '$confirmedCount',
                       label: 'Confirmed',
                       color: Colors.green,
-                      onTap: () => setState(() => _selectedStatusFilter = 'Confirmed'),
+                      onTap: () =>
+                          setState(() => _selectedStatusFilter = 'Confirmed'),
                     )),
                     const SizedBox(width: 10),
-                    Expanded(child: _buildStatCard(
+                    Expanded(
+                        child: _buildStatCard(
                       icon: Icons.event_available,
                       value: '$completedCount',
                       label: 'Completed',
                       color: Colors.blue,
-                      onTap: () => setState(() => _selectedStatusFilter = 'Completed'),
+                      onTap: () =>
+                          setState(() => _selectedStatusFilter = 'Completed'),
                     )),
                   ],
                 ),
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    Expanded(child: _buildStatCard(
+                    Expanded(
+                        child: _buildStatCard(
                       icon: Icons.cancel,
                       value: '$cancelledCount',
                       label: 'Cancelled',
                       color: Colors.red,
-                      onTap: () => setState(() => _selectedStatusFilter = 'Cancelled'),
+                      onTap: () =>
+                          setState(() => _selectedStatusFilter = 'Cancelled'),
                     )),
                     const SizedBox(width: 10),
                     const Expanded(child: SizedBox()),
@@ -563,14 +591,21 @@ class _AdminDashboardState extends State<AdminDashboard>
                       label: Text(status),
                       labelStyle: TextStyle(
                         fontSize: 12,
-                        color: isSelected ? Colors.white : (isDark ? Colors.white70 : Colors.grey.shade700),
+                        color: isSelected
+                            ? Colors.white
+                            : (isDark ? Colors.white70 : Colors.grey.shade700),
                       ),
-                      backgroundColor: isDark ? const Color(0xFF1A332D) : Colors.white,
-                      selectedColor: status == 'Pending' ? Colors.orange :
-                                    status == 'Confirmed' ? Colors.green :
-                                    status == 'Completed' ? Colors.blue :
-                                    status == 'Cancelled' ? Colors.red :
-                                    const Color(0xFF1D9E75),
+                      backgroundColor:
+                          isDark ? const Color(0xFF1A332D) : Colors.white,
+                      selectedColor: status == 'Pending'
+                          ? Colors.orange
+                          : status == 'Confirmed'
+                              ? Colors.green
+                              : status == 'Completed'
+                                  ? Colors.blue
+                                  : status == 'Cancelled'
+                                      ? Colors.red
+                                      : const Color(0xFF1D9E75),
                       onSelected: (selected) {
                         setState(() {
                           _selectedStatusFilter = status;
@@ -593,7 +628,9 @@ class _AdminDashboardState extends State<AdminDashboard>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: isDark ? Colors.black.withOpacity(0.2) : Colors.black.withOpacity(0.05),
+                    color: isDark
+                        ? Colors.black.withValues(alpha: 0.2)
+                        : Colors.black.withValues(alpha: 0.05),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -602,11 +639,15 @@ class _AdminDashboardState extends State<AdminDashboard>
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Search by name or ID...',
-                  hintStyle: TextStyle(fontSize: 13, color: isDark ? Colors.white54 : Colors.grey.shade400),
-                  prefixIcon: const Icon(Icons.search, color: Color(0xFF1D9E75), size: 20),
+                  hintStyle: TextStyle(
+                      fontSize: 13,
+                      color: isDark ? Colors.white54 : Colors.grey.shade400),
+                  prefixIcon: const Icon(Icons.search,
+                      color: Color(0xFF1D9E75), size: 20),
                   suffixIcon: _searchQuery.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.clear, color: Colors.grey, size: 18),
+                          icon: const Icon(Icons.clear,
+                              color: Colors.grey, size: 18),
                           onPressed: () => setState(() => _searchQuery = ''),
                         )
                       : null,
@@ -616,7 +657,8 @@ class _AdminDashboardState extends State<AdminDashboard>
                   ),
                   filled: true,
                   fillColor: Colors.white,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 ),
                 onChanged: (value) => setState(() => _searchQuery = value),
               ),
@@ -650,8 +692,8 @@ class _AdminDashboardState extends State<AdminDashboard>
     required VoidCallback onTap,
   }) {
     final isActive = (_selectedStatusFilter == 'All' && label == 'Total') ||
-                     (_selectedStatusFilter == label);
-    
+        (_selectedStatusFilter == label);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -662,7 +704,7 @@ class _AdminDashboardState extends State<AdminDashboard>
           border: isActive ? Border.all(color: color, width: 2) : null,
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -674,7 +716,7 @@ class _AdminDashboardState extends State<AdminDashboard>
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: color, size: 18),
@@ -704,12 +746,12 @@ class _AdminDashboardState extends State<AdminDashboard>
   Widget _buildBookingCard(Map<String, dynamic> booking, int index) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final statusColor = _getStatusColor(booking['status']);
-    
+
     // Check if user is anonymous (name starts with "Anonymous User #")
     final studentName = booking['studentName'] as String;
     final isAnonymous = studentName.startsWith('Anonymous User #');
     final displayName = isAnonymous ? studentName : studentName; // Keep as is
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -717,7 +759,9 @@ class _AdminDashboardState extends State<AdminDashboard>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: isDark ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.05),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -739,13 +783,17 @@ class _AdminDashboardState extends State<AdminDashboard>
                       height: 45,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [statusColor, statusColor.withOpacity(0.7)],
+                          colors: [
+                            statusColor,
+                            statusColor.withValues(alpha: 0.7)
+                          ],
                         ),
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: isAnonymous
-                            ? const Icon(Icons.person_outline, color: Colors.white, size: 24)
+                            ? const Icon(Icons.person_outline,
+                                color: Colors.white, size: 24)
                             : Text(
                                 studentName
                                     .split(' ')
@@ -773,19 +821,23 @@ class _AdminDashboardState extends State<AdminDashboard>
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14,
-                                    color: isDark ? Colors.white : const Color(0xFF1F3B42),
+                                    color: isDark
+                                        ? Colors.white
+                                        : const Color(0xFF1F3B42),
                                   ),
                                 ),
                               ),
                               if (isAnonymous)
                                 Container(
                                   margin: const EdgeInsets.only(left: 6),
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 2),
                                   decoration: BoxDecoration(
                                     color: Colors.grey.shade200,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
-                                  child: const Icon(Icons.visibility_off, size: 12, color: Colors.grey),
+                                  child: const Icon(Icons.visibility_off,
+                                      size: 12, color: Colors.grey),
                                 ),
                             ],
                           ),
@@ -794,24 +846,29 @@ class _AdminDashboardState extends State<AdminDashboard>
                             'ID: ${booking['studentId']}',
                             style: TextStyle(
                               fontSize: 11,
-                              color: isDark ? Colors.white70 : Colors.grey.shade600,
+                              color: isDark
+                                  ? Colors.white70
+                                  : Colors.grey.shade600,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            '${booking['date']} • ${booking['time']}',
+                            '${booking['date']} â€¢ ${booking['time']}',
                             style: TextStyle(
                               fontSize: 10,
-                              color: isDark ? Colors.white54 : Colors.grey.shade500,
+                              color: isDark
+                                  ? Colors.white54
+                                  : Colors.grey.shade500,
                             ),
                           ),
                         ],
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: statusColor.withOpacity(0.1),
+                        color: statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
@@ -845,7 +902,8 @@ class _AdminDashboardState extends State<AdminDashboard>
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () => _updateStatus(booking['id'], 'Approved'),
+                          onPressed: () =>
+                              _updateStatus(booking['id'], 'Approved'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -869,7 +927,8 @@ class _AdminDashboardState extends State<AdminDashboard>
                       const SizedBox(width: 10),
                       Expanded(
                         child: OutlinedButton(
-                          onPressed: () => _updateStatus(booking['id'], 'Denied'),
+                          onPressed: () =>
+                              _updateStatus(booking['id'], 'Denied'),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.red,
                             side: const BorderSide(color: Colors.red),
@@ -909,7 +968,7 @@ class _AdminDashboardState extends State<AdminDashboard>
     final completed = _bookings.where((b) => b['status'] == 'Completed').length;
     final cancelled = _bookings.where((b) => b['status'] == 'Cancelled').length;
     final total = _bookings.length;
-    
+
     // Weekly data
     final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     final dailyBookings = [
@@ -924,7 +983,7 @@ class _AdminDashboardState extends State<AdminDashboard>
     final maxBookings = dailyBookings.reduce((a, b) => a > b ? a : b);
     final totalWeekly = dailyBookings.reduce((a, b) => a + b);
     final avgDaily = totalWeekly / 7;
-    
+
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.all(16),
@@ -938,7 +997,7 @@ class _AdminDashboardState extends State<AdminDashboard>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -957,7 +1016,8 @@ class _AdminDashboardState extends State<AdminDashboard>
                         ),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.pie_chart, color: Colors.white, size: 18),
+                      child: const Icon(Icons.pie_chart,
+                          color: Colors.white, size: 18),
                     ),
                     const SizedBox(width: 10),
                     const Text(
@@ -981,7 +1041,9 @@ class _AdminDashboardState extends State<AdminDashboard>
                       sections: [
                         PieChartSectionData(
                           value: pending.toDouble(),
-                          title: pending > 0 && total > 0 ? '${(pending / total * 100).toStringAsFixed(0)}%' : '',
+                          title: pending > 0 && total > 0
+                              ? '${(pending / total * 100).toStringAsFixed(0)}%'
+                              : '',
                           color: Colors.orange,
                           radius: 80,
                           titleStyle: const TextStyle(
@@ -992,7 +1054,9 @@ class _AdminDashboardState extends State<AdminDashboard>
                         ),
                         PieChartSectionData(
                           value: confirmed.toDouble(),
-                          title: confirmed > 0 && total > 0 ? '${(confirmed / total * 100).toStringAsFixed(0)}%' : '',
+                          title: confirmed > 0 && total > 0
+                              ? '${(confirmed / total * 100).toStringAsFixed(0)}%'
+                              : '',
                           color: Colors.green,
                           radius: 80,
                           titleStyle: const TextStyle(
@@ -1003,7 +1067,9 @@ class _AdminDashboardState extends State<AdminDashboard>
                         ),
                         PieChartSectionData(
                           value: completed.toDouble(),
-                          title: completed > 0 && total > 0 ? '${(completed / total * 100).toStringAsFixed(0)}%' : '',
+                          title: completed > 0 && total > 0
+                              ? '${(completed / total * 100).toStringAsFixed(0)}%'
+                              : '',
                           color: Colors.blue,
                           radius: 80,
                           titleStyle: const TextStyle(
@@ -1014,7 +1080,9 @@ class _AdminDashboardState extends State<AdminDashboard>
                         ),
                         PieChartSectionData(
                           value: cancelled.toDouble(),
-                          title: cancelled > 0 && total > 0 ? '${(cancelled / total * 100).toStringAsFixed(0)}%' : '',
+                          title: cancelled > 0 && total > 0
+                              ? '${(cancelled / total * 100).toStringAsFixed(0)}%'
+                              : '',
                           color: Colors.red,
                           radius: 80,
                           titleStyle: const TextStyle(
@@ -1034,8 +1102,10 @@ class _AdminDashboardState extends State<AdminDashboard>
                   runSpacing: 12,
                   children: [
                     _buildLegendItem(Colors.orange, 'Pending', pending, total),
-                    _buildLegendItem(Colors.green, 'Confirmed', confirmed, total),
-                    _buildLegendItem(Colors.blue, 'Completed', completed, total),
+                    _buildLegendItem(
+                        Colors.green, 'Confirmed', confirmed, total),
+                    _buildLegendItem(
+                        Colors.blue, 'Completed', completed, total),
                     _buildLegendItem(Colors.red, 'Cancelled', cancelled, total),
                   ],
                 ),
@@ -1043,7 +1113,7 @@ class _AdminDashboardState extends State<AdminDashboard>
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Bar Chart - Weekly Activity
           Container(
             padding: const EdgeInsets.all(16),
@@ -1052,7 +1122,7 @@ class _AdminDashboardState extends State<AdminDashboard>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -1071,7 +1141,8 @@ class _AdminDashboardState extends State<AdminDashboard>
                         ),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.bar_chart, color: Colors.white, size: 18),
+                      child: const Icon(Icons.bar_chart,
+                          color: Colors.white, size: 18),
                     ),
                     const SizedBox(width: 10),
                     const Text(
@@ -1170,9 +1241,14 @@ class _AdminDashboardState extends State<AdminDashboard>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildStatItem('Total This Week', totalWeekly.toString(), Icons.calendar_view_week),
-                      _buildStatItem('Avg. Daily', avgDaily.toStringAsFixed(1), Icons.trending_up),
-                      _buildStatItem('Peak Day', days[dailyBookings.indexOf(maxBookings)], Icons.emoji_events),
+                      _buildStatItem('Total This Week', totalWeekly.toString(),
+                          Icons.calendar_view_week),
+                      _buildStatItem('Avg. Daily', avgDaily.toStringAsFixed(1),
+                          Icons.trending_up),
+                      _buildStatItem(
+                          'Peak Day',
+                          days[dailyBookings.indexOf(maxBookings)],
+                          Icons.emoji_events),
                     ],
                   ),
                 ),
@@ -1180,7 +1256,7 @@ class _AdminDashboardState extends State<AdminDashboard>
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Insights Card
           Container(
             padding: const EdgeInsets.all(16),
@@ -1189,7 +1265,7 @@ class _AdminDashboardState extends State<AdminDashboard>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -1208,7 +1284,8 @@ class _AdminDashboardState extends State<AdminDashboard>
                         ),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.trending_up, color: Colors.white, size: 18),
+                      child: const Icon(Icons.trending_up,
+                          color: Colors.white, size: 18),
                     ),
                     const SizedBox(width: 10),
                     const Text(
@@ -1225,7 +1302,7 @@ class _AdminDashboardState extends State<AdminDashboard>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1D9E75).withOpacity(0.1),
+                    color: const Color(0xFF1D9E75).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -1235,10 +1312,13 @@ class _AdminDashboardState extends State<AdminDashboard>
                           children: [
                             const Text(
                               'Confirmation Rate',
-                              style: TextStyle(fontSize: 11, color: Colors.grey),
+                              style:
+                                  TextStyle(fontSize: 11, color: Colors.grey),
                             ),
                             Text(
-                              total > 0 ? '${((confirmed + completed) / total * 100).toStringAsFixed(1)}%' : '0%',
+                              total > 0
+                                  ? '${((confirmed + completed) / total * 100).toStringAsFixed(1)}%'
+                                  : '0%',
                               style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
@@ -1258,7 +1338,8 @@ class _AdminDashboardState extends State<AdminDashboard>
                           children: [
                             const Text(
                               'Pending Actions',
-                              style: TextStyle(fontSize: 11, color: Colors.grey),
+                              style:
+                                  TextStyle(fontSize: 11, color: Colors.grey),
                             ),
                             Text(
                               pending.toString(),
@@ -1284,7 +1365,8 @@ class _AdminDashboardState extends State<AdminDashboard>
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.tips_and_updates, color: Colors.amber.shade700, size: 16),
+                        Icon(Icons.tips_and_updates,
+                            color: Colors.amber.shade700, size: 16),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
@@ -1302,7 +1384,7 @@ class _AdminDashboardState extends State<AdminDashboard>
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Top Counselors
           Container(
             padding: const EdgeInsets.all(16),
@@ -1311,7 +1393,7 @@ class _AdminDashboardState extends State<AdminDashboard>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -1330,7 +1412,8 @@ class _AdminDashboardState extends State<AdminDashboard>
                         ),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.leaderboard, color: Colors.white, size: 18),
+                      child: const Icon(Icons.leaderboard,
+                          color: Colors.white, size: 18),
                     ),
                     const SizedBox(width: 10),
                     const Text(
@@ -1401,7 +1484,8 @@ class _AdminDashboardState extends State<AdminDashboard>
                           children: [
                             Row(
                               children: [
-                                const Icon(Icons.star, color: Colors.amber, size: 14),
+                                const Icon(Icons.star,
+                                    color: Colors.amber, size: 14),
                                 const SizedBox(width: 4),
                                 Text(
                                   '${counselor['rating']}',
@@ -1435,7 +1519,8 @@ class _AdminDashboardState extends State<AdminDashboard>
   }
 
   Widget _buildLegendItem(Color color, String label, int count, int total) {
-    final percentage = total > 0 ? (count / total * 100).toStringAsFixed(1) : '0';
+    final percentage =
+        total > 0 ? (count / total * 100).toStringAsFixed(1) : '0';
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -1497,7 +1582,7 @@ class _AdminDashboardState extends State<AdminDashboard>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -1549,7 +1634,8 @@ class _AdminDashboardState extends State<AdminDashboard>
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(Icons.work_outline, size: 12, color: Colors.grey.shade500),
+                          Icon(Icons.work_outline,
+                              size: 12, color: Colors.grey.shade500),
                           const SizedBox(width: 4),
                           Text(
                             counselor['experience'],
@@ -1559,7 +1645,8 @@ class _AdminDashboardState extends State<AdminDashboard>
                             ),
                           ),
                           const SizedBox(width: 12),
-                          Icon(Icons.star, size: 12, color: Colors.amber.shade600),
+                          Icon(Icons.star,
+                              size: 12, color: Colors.amber.shade600),
                           const SizedBox(width: 4),
                           Text(
                             '${counselor['rating']}',
@@ -1574,11 +1661,12 @@ class _AdminDashboardState extends State<AdminDashboard>
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                     color: counselor['available']
-                        ? Colors.green.withOpacity(0.1)
-                        : Colors.grey.withOpacity(0.1),
+                        ? Colors.green.withValues(alpha: 0.1)
+                        : Colors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -1588,7 +1676,9 @@ class _AdminDashboardState extends State<AdminDashboard>
                         width: 6,
                         height: 6,
                         decoration: BoxDecoration(
-                          color: counselor['available'] ? Colors.green : Colors.grey,
+                          color: counselor['available']
+                              ? Colors.green
+                              : Colors.grey,
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -1598,7 +1688,9 @@ class _AdminDashboardState extends State<AdminDashboard>
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
-                          color: counselor['available'] ? Colors.green : Colors.grey,
+                          color: counselor['available']
+                              ? Colors.green
+                              : Colors.grey,
                         ),
                       ),
                     ],
@@ -1650,11 +1742,11 @@ class _AdminDashboardState extends State<AdminDashboard>
 
   Future<void> _updateStatus(String bookingId, String newStatus) async {
     bool firestoreSuccess = false;
-    
+
     try {
       // Try to update status in Firestore first
       await _bookingService.updateBookingStatus(bookingId, newStatus);
-      
+
       // Get booking details to send notification
       final bookingDoc = await _bookingService.getBooking(bookingId);
       if (bookingDoc.exists && bookingDoc.data() != null) {
@@ -1663,34 +1755,37 @@ class _AdminDashboardState extends State<AdminDashboard>
         final counselorName = bookingData['counselorName'];
         final date = bookingData['date'];
         final time = bookingData['time'];
-        
+
         // Send notification based on status
         if (newStatus == 'Confirmed' || newStatus == 'Approved') {
           await _bookingService.sendBookingNotification(
             userId: userId,
-            title: 'Booking Approved ✅',
-            body: 'Your counselor session with $counselorName has been confirmed for $date at $time.',
+            title: 'Booking Approved âœ…',
+            body:
+                'Your counselor session with $counselorName has been confirmed for $date at $time.',
             type: 'Booking',
           );
         } else if (newStatus == 'Cancelled' || newStatus == 'Denied') {
           await _bookingService.sendBookingNotification(
             userId: userId,
-            title: 'Booking Cancelled ❌',
-            body: 'Your counselor booking was not approved. Please contact support if you have questions.',
+            title: 'Booking Cancelled âŒ',
+            body:
+                'Your counselor booking was not approved. Please contact support if you have questions.',
             type: 'Booking',
           );
         }
       }
-      
+
       firestoreSuccess = true;
     } catch (e) {
       debugPrint('Firestore update failed (using local storage): $e');
       // Firestore failed, will use local storage only
     }
-    
+
     // Always update local storage for UI feedback
     setState(() {
-      final index = BookingStorage.bookings.indexWhere((b) => b.id == bookingId);
+      final index =
+          BookingStorage.bookings.indexWhere((b) => b.id == bookingId);
       if (index != -1) {
         final updatedBooking = BookingModel(
           id: BookingStorage.bookings[index].id,
@@ -1705,41 +1800,44 @@ class _AdminDashboardState extends State<AdminDashboard>
         BookingStorage.bookings[index] = updatedBooking;
       }
     });
-    
+
     // Show success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(firestoreSuccess ? Icons.check_circle : Icons.info, 
-                color: Colors.white, size: 20),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Booking $newStatus successfully',
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                  ),
-                  if (!firestoreSuccess)
-                    const Text(
-                      '(Saved locally - connect to Firebase for sync)',
-                      style: TextStyle(fontSize: 11),
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(firestoreSuccess ? Icons.check_circle : Icons.info,
+                  color: Colors.white, size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Booking $newStatus successfully',
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.bold),
                     ),
-                ],
+                    if (!firestoreSuccess)
+                      const Text(
+                        '(Saved locally - connect to Firebase for sync)',
+                        style: TextStyle(fontSize: 11),
+                      ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
+          backgroundColor: firestoreSuccess
+              ? (newStatus == 'Approved' ? Colors.green : Colors.red)
+              : Colors.orange,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 3),
         ),
-        backgroundColor: firestoreSuccess 
-            ? (newStatus == 'Approved' ? Colors.green : Colors.red)
-            : Colors.orange,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 3),
-      ),
-    );
+      );
+    }
   }
 
   void _showBookingDetails(Map<String, dynamic> booking) {
@@ -1810,9 +1908,11 @@ class _AdminDashboardState extends State<AdminDashboard>
                     const SizedBox(height: 8),
                     Center(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
-                          color: _getStatusColor(booking['status']).withOpacity(0.1),
+                          color: _getStatusColor(booking['status'])
+                              .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -1826,11 +1926,14 @@ class _AdminDashboardState extends State<AdminDashboard>
                       ),
                     ),
                     const SizedBox(height: 20),
-                    _buildDetailRow(Icons.badge, 'Student ID', booking['studentId']),
+                    _buildDetailRow(
+                        Icons.badge, 'Student ID', booking['studentId']),
                     const SizedBox(height: 12),
-                    _buildDetailRow(Icons.psychology, 'Counselor', booking['counselor']),
+                    _buildDetailRow(
+                        Icons.psychology, 'Counselor', booking['counselor']),
                     const SizedBox(height: 12),
-                    _buildDetailRow(Icons.calendar_today, 'Date', booking['date']),
+                    _buildDetailRow(
+                        Icons.calendar_today, 'Date', booking['date']),
                     const SizedBox(height: 12),
                     _buildDetailRow(Icons.access_time, 'Time', booking['time']),
                     const SizedBox(height: 12),
@@ -1855,7 +1958,7 @@ class _AdminDashboardState extends State<AdminDashboard>
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: const Color(0xFF1D9E75).withOpacity(0.1),
+            color: const Color(0xFF1D9E75).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: const Color(0xFF1D9E75), size: 16),

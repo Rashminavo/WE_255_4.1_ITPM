@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'app_colors.dart';
  
 class ResourcesScreen extends StatelessWidget {
@@ -57,7 +57,7 @@ class ResourcesScreen extends StatelessWidget {
         {
           'title': 'Criminal Charges',
           'desc':
-              'Ragging can attract IPC Sections 294, 323, 506 — covering obscenity, causing hurt, and criminal intimidation.',
+              'Ragging can attract IPC Sections 294, 323, 506 â€” covering obscenity, causing hurt, and criminal intimidation.',
         },
       ],
     },
@@ -145,7 +145,7 @@ class _ResourceSectionState extends State<_ResourceSection> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 8,
             offset: const Offset(0, 3),
           )
@@ -238,5 +238,6 @@ class _ResourceSectionState extends State<_ResourceSection> {
   }
 }
  
+
 
 
