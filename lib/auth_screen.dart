@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'Screens/login_screen.dart';
+import 'screens/login_screen.dart';
 import 'widgets/main_navigation.dart';
 import 'features/admin/admin_dashboard.dart';
 

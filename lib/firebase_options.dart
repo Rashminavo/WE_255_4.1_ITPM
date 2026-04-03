@@ -23,20 +23,11 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -50,20 +41,46 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyB9ZsDmmv19CCu2iKfdMtZSX-MPQ0knh3M',
-    appId: '1:589530377538:web:beb08b1f4ea422fb18acdb',
-    messagingSenderId: '589530377538',
-    projectId: 'ragasafesl-25f7d',
-    authDomain: 'ragasafesl-25f7d.firebaseapp.com',
-    storageBucket: 'ragasafesl-25f7d.firebasestorage.app',
+    apiKey: 'AIzaSyC6kzkYTpwXT34U4-mmDkywhOzgF19DF2o',
+    appId: '1:488978580208:web:740a2b6e0c4f969f753835',
+    messagingSenderId: '488978580208',
+    projectId: 'ragsafesl',
+    authDomain: 'ragsafesl.firebaseapp.com',
+    storageBucket: 'ragsafesl.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDSzP6jnOopV1XWjetku8DBdSWKbp_FqWs',
-    appId: '1:589530377538:android:000b7700ebffa41018acdb',
-    messagingSenderId: '589530377538',
-    projectId: 'ragasafesl-25f7d',
-    storageBucket: 'ragasafesl-25f7d.firebasestorage.app',
+    apiKey: 'AIzaSyDhZ43p5A1UEhzCYrDw5kY_jnvmuFkZMBk',
+    appId: '1:488978580208:android:14ee68c15ebcc8a9753835',
+    messagingSenderId: '488978580208',
+    projectId: 'ragsafesl',
+    storageBucket: 'ragsafesl.firebasestorage.app',
   );
 
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyB8eEwBpRX65bgoFyMpK4QJh-3xKIp0-B0',
+    appId: '1:488978580208:ios:27f9ff69e13a4e93753835',
+    messagingSenderId: '488978580208',
+    projectId: 'ragsafesl',
+    storageBucket: 'ragsafesl.firebasestorage.app',
+    iosBundleId: 'com.example.ragsafeSl',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyB8eEwBpRX65bgoFyMpK4QJh-3xKIp0-B0',
+    appId: '1:488978580208:ios:27f9ff69e13a4e93753835',
+    messagingSenderId: '488978580208',
+    projectId: 'ragsafesl',
+    storageBucket: 'ragsafesl.firebasestorage.app',
+    iosBundleId: 'com.example.ragsafeSl',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyC6kzkYTpwXT34U4-mmDkywhOzgF19DF2o',
+    appId: '1:488978580208:web:ef330396db35a5d7753835',
+    messagingSenderId: '488978580208',
+    projectId: 'ragsafesl',
+    authDomain: 'ragsafesl.firebaseapp.com',
+    storageBucket: 'ragsafesl.firebasestorage.app',
+  );
 }
