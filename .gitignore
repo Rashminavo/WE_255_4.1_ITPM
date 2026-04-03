@@ -1,0 +1,17 @@
+﻿# Flutter
+.dart_tool/
+.packages
+build/
+ios/Pods/
+pubspec.lock
+
+# Logs
+*.log
+
+# IDE
+.idea/
+.vscode/
+
+# Mac/Windows
+.DS_Store
+Thumbs.db
