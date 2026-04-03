@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dashboard_screen.dart';
 import 'counselor_screen.dart';
-
-// TODO: Team members - Import your screens here
-// import 'learn_screen.dart';       // Member 1
-// import 'report_sos_screen.dart';  // Member 2
-// import 'buddy_screen.dart';       // Member 3
+import 'quiz_screen.dart';
+import 'consequences_flowchart_screen.dart';
+import 'buddy_hub_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -21,27 +19,9 @@ class _MainNavigationState extends State<MainNavigation> {
   // Define the screens list
   final List<Widget> _screens = [
     const DashboardScreen(),           // Home
-    const Center(                      // Learn Screen (Member 1)
-      child: Text(
-        "Learn Screen\n(Member 1)",
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 16),
-      ),
-    ),
-    const Center(                      // Report & SOS (Member 2)
-      child: Text(
-        "Report & SOS\n(Member 2)",
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 16),
-      ),
-    ),
-    const Center(                      // Buddy Module (Member 3)
-      child: Text(
-        "Buddy Module\n(Member 3)",
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 16),
-      ),
-    ),
+    const QuizScreen(),                // Learn Screen (Member 1) - Mental Wellness Quiz
+    const ConsequencesFlowchartScreen(), // Report & SOS (Member 2) - Flowchart
+    const BuddyHubScreen(),            // Buddy Module (Member 3)
     const CounselorScreen(),           // Support/Counselor
   ];
 
