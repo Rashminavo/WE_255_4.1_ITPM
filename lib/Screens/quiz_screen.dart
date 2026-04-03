@@ -1016,4 +1016,3 @@ class _ScoreBand extends StatelessWidget {
 
 // ── Result levels ────────────────────────────────────────────
 enum _QuizResult { healthy, mildConcern, highConcern }
-

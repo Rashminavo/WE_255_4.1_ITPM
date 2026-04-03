@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 
 class CloudinaryService {
   // === YOUR CLOUDINARY CREDENTIALS ===
@@ -12,26 +11,31 @@ class CloudinaryService {
   // Upload image or video to Cloudinary using direct HTTP API
   Future<String?> uploadFile(XFile file) async {
     try {
-      final url =
-          Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/upload');
-
-      final request = http.MultipartRequest('POST', url)
-        ..fields['upload_preset'] = 'ragsafe_preset'
-        ..fields['folder'] = 'ragsafe_reports'
-        ..files.add(await http.MultipartFile.fromPath('file', file.path));
-
-      final response = await request.send();
-
-      if (response.statusCode == 200) {
-        final responseString = await response.stream.bytesToString();
-        final jsonResponse = json.decode(responseString);
-
-        if (jsonResponse['secure_url'] != null) {
-          return jsonResponse['secure_url'];
-        }
+      // On web, skip upload and use the file path directly (it will be a data URL)
+      if (kIsWeb) {
+        debugPrint("Web platform detected - using image URL directly");
+        return file.path;
       }
 
-      debugPrint("Cloudinary upload failed: Status ${response.statusCode}");
+      final cloudinary = Cloudinary.full(
+        cloudName: cloudName,
+        apiKey: apiKey,
+        apiSecret: apiSecret,
+      );
+
+      final response = await cloudinary.uploadResource(
+        CloudinaryUploadResource(
+          filePath: file.path,
+          folder: 'ragsafe_reports',
+          resourceType: CloudinaryResourceType.auto,
+        ),
+      );
+
+      if (response.isSuccessful && response.secureUrl != null) {
+        return response.secureUrl;
+      }
+
+      debugPrint("Cloudinary upload failed: ${response.error}");
       return null;
     } catch (e) {
       debugPrint("Cloudinary upload error: $e");

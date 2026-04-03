@@ -3,5 +3,5 @@ import 'package:ragsafe_sl/main.dart';
 import 'package:flutter/material.dart';
 
 void main(List<String> arguments) {
-  runApp(const RagaSafeApp());
+  runApp(const MyApp());
 }

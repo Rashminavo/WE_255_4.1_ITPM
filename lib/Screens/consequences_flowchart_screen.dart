@@ -973,4 +973,3 @@ class _StepUpdate {
     required this.note,
   });
 }
-

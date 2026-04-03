@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
- 
+
 class AppColors {
   static const Color darkGreen = Color(0xFF2D6A4F);
   static const Color mediumGreen = Color(0xFF40916C);
@@ -12,6 +12,3 @@ class AppColors {
   static const Color textDark = Color(0xFF1A2E25);
   static const Color textMid = Color(0xFF4A7060);
 }
- 
-
-

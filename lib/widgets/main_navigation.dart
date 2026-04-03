@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../Screens/dashboard_screen.dart';
 import '../Screens/hub_home_screen.dart';
-import '../Screens/buddy_hub_screen.dart';
+import '../Screens/map_screen.dart';
 import '../Screens/profile_screen.dart';
 import '../features/reporting/report_screen.dart';
 import '../features/sos/sos_screen.dart';
@@ -18,11 +18,11 @@ class _MainNavigationState extends State<MainNavigation> {
 
   // Bottom Navigation Bar Tabs
   final List<Widget> _screens = [
-    const DashboardScreen(),      // Index 0 - Home
-    HubHomeScreen(),              // Index 1 - Learn
-    const ReportScreen(),         // Index 2 - Report
-    const BuddyHubScreen(),       // Index 3 - Buddy (changed from MapScreen)
-    const ProfileScreen(),        // Index 4 - Profile
+    const DashboardScreen(),   // Index 0 - Home
+    HubHomeScreen(),           // Index 1 - Learn
+    const ReportScreen(),      // Index 2 - Report
+    MapScreen(),               // Index 3 - Buddy
+    const ProfileScreen(),     // Index 4 - Profile
   ];
 
   @override

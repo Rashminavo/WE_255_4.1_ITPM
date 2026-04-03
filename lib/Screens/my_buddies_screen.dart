@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../providers/auth_provider.dart';
-import '../providers/buddy_provider.dart';
 import './chat_screen.dart';
 
 class MyBuddiesScreen extends StatefulWidget {
@@ -72,7 +71,9 @@ class _MyBuddiesScreenState extends State<MyBuddiesScreen> {
 
           // Filter for current user's connections
           final myConnections = snapshot.data!.docs
-              .where((doc) => doc['user1Id'] == currentUser?.uid || doc['user2Id'] == currentUser?.uid)
+              .where((doc) =>
+                  doc['user1Id'] == currentUser?.uid ||
+                  doc['user2Id'] == currentUser?.uid)
               .toList();
 
           if (myConnections.isEmpty) {
@@ -112,7 +113,7 @@ class _MyBuddiesScreenState extends State<MyBuddiesScreen> {
               final matchId = matchDoc.id;
               final user1Id = matchDoc['user1Id'] as String;
               final user2Id = matchDoc['user2Id'] as String;
-              
+
               // Get the other user's ID
               final buddyId = user1Id == currentUser?.uid ? user2Id : user1Id;
 
@@ -127,8 +128,10 @@ class _MyBuddiesScreenState extends State<MyBuddiesScreen> {
                     return const SizedBox.shrink();
                   }
 
-                  final buddyName = userSnapshot.data?['name'] as String? ?? "Unknown";
-                  final buddyFaculty = userSnapshot.data?['faculty'] as String? ?? "N/A";
+                  final buddyName =
+                      userSnapshot.data?['name'] as String? ?? "Unknown";
+                  final buddyFaculty =
+                      userSnapshot.data?['faculty'] as String? ?? "N/A";
 
                   return _buildBuddyCard(
                     context,

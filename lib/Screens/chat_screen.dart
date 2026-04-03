@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../providers/auth_provider.dart';
-import '../providers/chat_provider.dart';
 
 class ChatScreen extends StatefulWidget {
   final String matchId;
@@ -151,11 +150,14 @@ class _ChatScreenState extends State<ChatScreen> {
                         itemCount: messages.length,
                         itemBuilder: (context, index) {
                           final messageDoc = messages[index];
-                          final messageData = messageDoc.data() as Map<String, dynamic>;
+                          final messageData =
+                              messageDoc.data() as Map<String, dynamic>;
                           final senderId = messageData['senderId'] as String?;
                           final content = messageData['content'] as String?;
-                          final timestamp = messageData['timestamp'] as Timestamp?;
-                          final senderName = messageData['senderName'] as String? ?? "Unknown";
+                          final timestamp =
+                              messageData['timestamp'] as Timestamp?;
+                          final senderName =
+                              messageData['senderName'] as String? ?? "Unknown";
 
                           final isCurrentUser = senderId == currentUser?.uid;
 
@@ -226,14 +228,15 @@ class _ChatScreenState extends State<ChatScreen> {
                             borderRadius: BorderRadius.circular(24),
                             child: InkWell(
                               onTap: _hasText
-                                  ? () => _sendMessage(context.read<AuthProvider>().user?.uid ?? "")
+                                  ? () => _sendMessage(
+                                      context.read<AuthProvider>().user?.uid ??
+                                          "")
                                   : null,
                               borderRadius: BorderRadius.circular(24),
                               child: Icon(
                                 Icons.send,
-                                color: _hasText
-                                    ? Colors.white
-                                    : Colors.grey[400],
+                                color:
+                                    _hasText ? Colors.white : Colors.grey[400],
                               ),
                             ),
                           ),
@@ -253,14 +256,16 @@ class _ChatScreenState extends State<ChatScreen> {
     required String senderName,
     required DateTime timestamp,
   }) {
-    final timeStr = "${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}";
+    final timeStr =
+        "${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}";
 
     return Align(
       alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
         child: Column(
-          crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment:
+              isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             if (!isCurrentUser)
               Padding(
@@ -280,7 +285,8 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
-                color: isCurrentUser ? const Color(0xFF1D9E75) : Colors.grey[100],
+                color:
+                    isCurrentUser ? const Color(0xFF1D9E75) : Colors.grey[100],
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(18),
                   topRight: const Radius.circular(18),
@@ -331,28 +337,28 @@ class _ChatScreenState extends State<ChatScreen> {
     try {
       final currentUser = context.read<AuthProvider>().user;
       final messageContent = _messageController.text.trim();
-      
+
       // Add message to Firestore
       await FirebaseFirestore.instance
           .collection('conversations')
           .doc(_conversationId)
           .collection('messages')
           .add({
-            'senderId': senderId,
-            'senderName': currentUser?.name ?? currentUser?.email ?? "Unknown",
-            'content': messageContent,
-            'type': 'text',
-            'timestamp': DateTime.now(),
-            'isRead': false,
-          });
+        'senderId': senderId,
+        'senderName': currentUser?.name ?? currentUser?.email ?? "Unknown",
+        'content': messageContent,
+        'type': 'text',
+        'timestamp': DateTime.now(),
+        'isRead': false,
+      });
 
       // Update conversation lastMessageAt
       await FirebaseFirestore.instance
           .collection('conversations')
           .doc(_conversationId)
           .update({
-            'lastMessageAt': DateTime.now(),
-          });
+        'lastMessageAt': DateTime.now(),
+      });
 
       _messageController.clear();
       _scrollToBottom();

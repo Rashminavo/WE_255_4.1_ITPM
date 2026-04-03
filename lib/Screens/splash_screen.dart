@@ -196,50 +196,14 @@ class _SplashScreenState extends State<SplashScreen>
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // Pulsing logo with glow
-                            AnimatedBuilder(
-                              animation: _pulseAnimation,
-                              builder: (context, child) {
-                                return Transform.scale(
-                                  scale: _pulseAnimation.value,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(35),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      gradient: RadialGradient(
-                                        colors: [
-                                          Colors.white.withValues(alpha: 0.3),
-                                          Colors.white.withValues(alpha: 0.1),
-                                        ],
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.white.withValues(alpha: 
-                                              0.4 * _pulseAnimation.value),
-                                          blurRadius: 40,
-                                          spreadRadius: 10,
-                                        ),
-                                      ],
-                                    ),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(20),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withValues(alpha: 0.2),
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Colors.white.withValues(alpha: 0.3),
-                                          width: 2,
-                                        ),
-                                      ),
-                                      child: const Icon(
-                                        Icons.shield,
-                                        size: 70,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
+                            // Pulsing App Logo
+                            ScaleTransition(
+                              scale: _pulseAnimation,
+                              child: Image.asset(
+                                'assets/app_icon.png',
+                                width: 140,
+                                height: 140,
+                              ),
                             ),
 
                             const SizedBox(height: 40),
@@ -509,4 +473,3 @@ class _ShimmerTextState extends State<ShimmerText>
     );
   }
 }
-

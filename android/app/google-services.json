@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "49558448472",
-    "project_id": "itpm-new",
-    "storage_bucket": "itpm-new.firebasestorage.app"
+    "project_number": "589530377538",
+    "project_id": "ragasafesl-25f7d",
+    "storage_bucket": "ragasafesl-25f7d.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:49558448472:android:c526a2f9b317722fa75d2d",
+        "mobilesdk_app_id": "1:589530377538:android:000b7700ebffa41018acdb",
         "android_client_info": {
           "package_name": "com.example.ragsafe_sl"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCxSnexwHo528AB605yRmlQtZH1297OJGo"
+          "current_key": "AIzaSyDSzP6jnOopV1XWjetku8DBdSWKbp_FqWs"
         }
       ],
       "services": {
