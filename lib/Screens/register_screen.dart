@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -11,7 +13,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   
   final _nameController = TextEditingController();
-  final _idController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -21,7 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void dispose() {
     _nameController.dispose();
-    _idController.dispose();
+    _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -31,18 +33,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       
-      // Simulate registration delay 
-      await Future.delayed(const Duration(seconds: 1));
+      final authProvider = context.read<AuthProvider>();
+      final success = await authProvider.register(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        name: _nameController.text.trim(),
+        phone: _phoneController.text.trim(),
+      );
       
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registration Successful!'),
-            backgroundColor: Color(0xFF1D9E75),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-        Navigator.pop(context);
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Registration Successful!'),
+              backgroundColor: Color(0xFF1D9E75),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          Navigator.pop(context);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(authProvider.error ?? 'Registration failed'),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
       }
       setState(() => _isLoading = false);
     }
@@ -118,13 +135,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           const SizedBox(height: 12),
                           TextFormField(
-                            controller: _idController,
+                            controller: _phoneController,
                             decoration: const InputDecoration(
-                              labelText: "Student ID",
-                              prefixIcon: Icon(Icons.badge_outlined),
+                              labelText: "Phone Number",
+                              prefixIcon: Icon(Icons.phone_outlined),
                             ),
                             validator: (val) =>
-                                val == null || val.isEmpty ? "Enter Student ID" : null,
+                                val == null || val.isEmpty ? "Enter phone number" : null,
                           ),
                           const SizedBox(height: 12),
                           TextFormField(

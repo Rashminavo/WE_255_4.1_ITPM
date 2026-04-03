@@ -126,7 +126,7 @@ class ProgressBadgesScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.darkGreen.withOpacity(0.35),
+            color: AppColors.darkGreen.withValues(alpha: 0.35),
             blurRadius: 12,
             offset: const Offset(0, 5),
           ),
@@ -150,7 +150,7 @@ class ProgressBadgesScreen extends StatelessWidget {
                 Text(
                   'Keep learning to improve your score!',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                     fontSize: 12,
                   ),
                 ),
@@ -159,7 +159,7 @@ class ProgressBadgesScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   child: LinearProgressIndicator(
                     value: _campusSafetyScore / 100,
-                    backgroundColor: Colors.white.withOpacity(0.2),
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
                     valueColor:
                         const AlwaysStoppedAnimation<Color>(Color(0xFF74C69D)),
                     minHeight: 10,
@@ -169,7 +169,7 @@ class ProgressBadgesScreen extends StatelessWidget {
                 Text(
                   '$_campusSafetyScore / 100',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.85),
+                    color: Colors.white.withValues(alpha: 0.85),
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
@@ -189,7 +189,7 @@ class ProgressBadgesScreen extends StatelessWidget {
                   height: 72,
                   child: CircularProgressIndicator(
                     value: _campusSafetyScore / 100,
-                    backgroundColor: Colors.white.withOpacity(0.2),
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
                     valueColor: const AlwaysStoppedAnimation<Color>(
                         Color(0xFF74C69D)),
                     strokeWidth: 6,
@@ -285,7 +285,7 @@ class ProgressBadgesScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),
@@ -296,7 +296,7 @@ class ProgressBadgesScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: AppColors.darkGreen.withOpacity(0.1),
+                      color: AppColors.darkGreen.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(a['icon'] as IconData,
@@ -330,7 +330,7 @@ class ProgressBadgesScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: AppColors.darkGreen.withOpacity(0.1),
+                      color: AppColors.darkGreen.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -375,7 +375,7 @@ class _ProgressCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -446,12 +446,12 @@ class _BadgeTile extends StatelessWidget {
         color: earned ? Colors.white : Colors.grey.shade100,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: earned ? color.withOpacity(0.4) : Colors.grey.shade300,
+          color: earned ? color.withValues(alpha: 0.4) : Colors.grey.shade300,
         ),
         boxShadow: earned
             ? [
                 BoxShadow(
-                  color: color.withOpacity(0.15),
+                  color: color.withValues(alpha: 0.15),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
@@ -466,7 +466,7 @@ class _BadgeTile extends StatelessWidget {
             height: 44,
             decoration: BoxDecoration(
               color: earned
-                  ? color.withOpacity(0.12)
+                  ? color.withValues(alpha: 0.12)
                   : Colors.grey.shade200,
               shape: BoxShape.circle,
             ),
@@ -497,5 +497,6 @@ class _BadgeTile extends StatelessWidget {
   }
 }
  
+
 
 
