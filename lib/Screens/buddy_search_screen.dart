@@ -124,13 +124,13 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
                   final allUsers = snapshot.data!.docs
                       .where((doc) {
                         // Exclude current user
-                        if (doc['uid'] == currentUser?.uid) return false;
+                        if (doc.id == currentUser?.uid) return false;
                         
                         // Apply search filter
                         if (_searchQuery.isEmpty) return true;
                         
                         final name = (doc['name'] ?? '').toString().toLowerCase();
-                        final faculty = (doc['faculty'] ?? '').toString().toLowerCase();
+                        final faculty = (doc['faculty'] ?? doc['department'] ?? '').toString().toLowerCase();
                         return name.contains(_searchQuery) || faculty.contains(_searchQuery);
                       })
                       .toList();
@@ -166,9 +166,9 @@ class _BuddySearchScreenState extends State<BuddySearchScreen> {
                       itemCount: allUsers.length,
                       itemBuilder: (context, index) {
                         final userDoc = allUsers[index];
-                        final userId = userDoc['uid'] as String;
+                        final userId = userDoc.id as String;
                         final name = userDoc['name'] as String? ?? "Unknown";
-                        final faculty = userDoc['faculty'] as String? ?? "N/A";
+                        final faculty = userDoc['faculty'] as String? ?? userDoc['department'] as String? ?? "N/A";
                         final phone = userDoc['phone'] as String? ?? "";
 
                         return _buildUserCard(
