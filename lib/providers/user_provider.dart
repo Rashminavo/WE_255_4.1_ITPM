@@ -17,13 +17,13 @@ class UserProvider extends ChangeNotifier {
   dynamic _profileImage; // Can be File or Uint8List
   Uint8List? _webImageBytes; // For web platform
   
-  int _safetyScore = 85;
-  List<Map<String, dynamic>> _achievements = [
+  final int _safetyScore = 85;
+  final List<Map<String, dynamic>> _achievements = [
     {"icon": Icons.shield, "title": "Safety Champion", "desc": "7 days incident-free", "color": 0xFF4CAF50},
     {"icon": Icons.people, "title": "Buddy Helper", "desc": "Helped 5 students", "color": 0xFF2196F3},
     {"icon": Icons.star, "title": "Active Reporter", "desc": "Submitted 3 reports", "color": 0xFFFF9800},
   ];
-  List<Map<String, dynamic>> _emergencyContacts = [
+  final List<Map<String, dynamic>> _emergencyContacts = [
     {"name": "Father", "phone": "+94 77 987 6543", "relation": "Parent"},
     {"name": "Kavindu", "phone": "+94 76 456 7890", "relation": "Buddy"},
   ];
