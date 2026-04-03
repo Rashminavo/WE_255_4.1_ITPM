@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../providers/theme_provider.dart';
 import '../providers/user_provider.dart';
@@ -807,7 +806,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Column(
                           children: [
                             SwitchListTile(
-                              activeColor: const Color(0xFF1D9E75),
+                              activeThumbColor: const Color(0xFF1D9E75),
                               title: const Text("Live location sharing",
                                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                               subtitle: const Text(
@@ -820,7 +819,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Consumer<ThemeProvider>(
                               builder: (context, themeProvider, child) {
                                 return SwitchListTile(
-                                  activeColor: const Color(0xFF1D9E75),
+                                  activeThumbColor: const Color(0xFF1D9E75),
                                   title: const Text("Dark mode",
                                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                                   subtitle: const Text(
@@ -834,7 +833,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Consumer<UserProvider>(
                               builder: (context, userProvider, child) {
                                 return SwitchListTile(
-                                  activeColor: const Color(0xFF1D9E75),
+                                  activeThumbColor: const Color(0xFF1D9E75),
                                   title: const Text("Anonymous mode",
                                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                                   subtitle: const Text(

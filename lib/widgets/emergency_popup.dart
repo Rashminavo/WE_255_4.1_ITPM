@@ -107,7 +107,6 @@ class _EmergencyPopupState extends State<EmergencyPopup>
           );
         },
         onCancel: () async {
-          final messenger = ScaffoldMessenger.of(context);
           final navigator = Navigator.of(context);
           final rootNavigator = Navigator.of(this.context);
           final bool isPopupMounted = mounted;

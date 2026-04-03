@@ -139,7 +139,6 @@ class _CounselorScreenState extends State<CounselorScreen>
   DateTime _selectedDate = DateTime.now();
   String? _selectedTimeSlot;
   String? _selectedReason;
-  bool _isBooking = false;
 
   final List<String> _reasons = [
     "Ragging / Harassment",
@@ -463,7 +462,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                         ),
                         const SizedBox(height: 10),
                         DropdownButtonFormField<String>(
-                          value: _selectedReason,
+                          initialValue: _selectedReason,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -585,10 +584,6 @@ class _CounselorScreenState extends State<CounselorScreen>
   }
 
   void _confirmBooking(Map<String, dynamic> counselor) async {
-    setState(() {
-      _isBooking = true;
-    });
-
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     
     // Determine student name based on anonymous mode
@@ -667,7 +662,7 @@ class _CounselorScreenState extends State<CounselorScreen>
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "${DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate)} at ${_selectedTimeSlot}",
+                    "${DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate)} at $_selectedTimeSlot",
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -693,9 +688,6 @@ class _CounselorScreenState extends State<CounselorScreen>
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         Navigator.pop(context);
-        setState(() {
-          _isBooking = false;
-        });
         _showBookingSuccessDialog(counselor);
       }
     });

@@ -1,12 +1,10 @@
 // lib/services/sos_service_web.dart
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../widgets/emergency_popup.dart';
 
 /// Web-specific SOS service implementation (shake detection disabled on web)
 class SosService {
@@ -14,14 +12,11 @@ class SosService {
   factory SosService() => _instance;
   SosService._internal();
 
-  bool _isShakeEnabled = false; // Always false on web
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   /// Initialize the SOS service
   Future<void> init() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      _isShakeEnabled = prefs.getBool('shake_detection_enabled') ?? false;
       debugPrint(
           "✓ SOS Service initialized for web (shake detection disabled)");
     } catch (e) {
@@ -44,21 +39,10 @@ class SosService {
     if (enabled) {
       debugPrint("⚠️ Shake detection is not available on web platform");
     }
-    _isShakeEnabled = false;
   }
 
   bool get isShakeEnabled => false; // Always false on web
 
-  void _showEmergencyPopup() {
-    final context = navigatorKey.currentContext;
-    if (context != null) {
-      showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (context) => const EmergencyPopup(),
-      );
-    }
-  }
 
   /// Execute Full SOS sequence
   Future<void> triggerFullSos(BuildContext context) async {
