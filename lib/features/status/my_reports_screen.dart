@@ -1,6 +1,7 @@
 // lib/features/status/my_reports_screen.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import '../status/report_detail_screen.dart';
@@ -14,6 +15,11 @@ class MyReportsScreen extends StatefulWidget {
 }
 
 class _MyReportsScreenState extends State<MyReportsScreen> {
+  String? _getCurrentUserId() {
+    final user = FirebaseAuth.instance.currentUser;
+    return user?.uid;
+  }
+
   void _showTrackStatusDialog(BuildContext context) {
     final idController = TextEditingController();
     showDialog(
@@ -84,7 +90,7 @@ class _MyReportsScreenState extends State<MyReportsScreen> {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('reports')
-            .orderBy('timestamp', descending: true)
+            .where('userId', isEqualTo: _getCurrentUserId())
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -96,6 +102,25 @@ class _MyReportsScreenState extends State<MyReportsScreen> {
           }
 
           final reports = snapshot.data?.docs ?? [];
+
+          // Sort reports by timestamp locally if needed
+          reports.sort((a, b) {
+            final aTime = a['timestamp'];
+            final bTime = b['timestamp'];
+            if (aTime == null || bTime == null) return 0;
+
+            DateTime aDate, bDate;
+            try {
+              aDate =
+                  (aTime is Timestamp) ? aTime.toDate() : DateTime.parse(aTime);
+              bDate =
+                  (bTime is Timestamp) ? bTime.toDate() : DateTime.parse(bTime);
+            } catch (e) {
+              return 0;
+            }
+            return bDate.compareTo(aDate);
+          });
+
           if (reports.isEmpty) {
             return const Center(child: Text('No reports submitted yet.'));
           }

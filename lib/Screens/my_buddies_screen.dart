@@ -263,7 +263,6 @@ class _MyBuddiesScreenState extends State<MyBuddiesScreen> {
   }
 
   void _openChat(BuildContext context, String matchId, String buddyName) {
-    // TODO: Navigate to chat screen with matchId
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -276,7 +275,6 @@ class _MyBuddiesScreenState extends State<MyBuddiesScreen> {
   }
 
   void _viewProfile(BuildContext context, String buddyName) {
-    // TODO: Navigate to buddy profile screen
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("Viewing $buddyName's profile"),

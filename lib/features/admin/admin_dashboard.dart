@@ -198,13 +198,41 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   Widget _buildReportsList() {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore
-          .collection('reports')
-          .orderBy('timestamp', descending: true)
-          .snapshots(),
+      stream: _firestore.collection('reports').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          final error = snapshot.error.toString();
+          if (error.contains('requires an index')) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.info, size: 48, color: Colors.orange),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Creating Firestore Indexes...',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Firestore is creating required indexes.\\nPlease refresh in a few moments.',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(color: Colors.grey.shade700, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+          return Center(child: Text('Error: ${snapshot.error}'));
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -218,6 +246,24 @@ class _AdminDashboardState extends State<AdminDashboard> {
         }
 
         final allReports = snapshot.data!.docs;
+
+        // Sort reports by timestamp locally
+        allReports.sort((a, b) {
+          final aTime = a['timestamp'];
+          final bTime = b['timestamp'];
+          if (aTime == null || bTime == null) return 0;
+
+          DateTime aDate, bDate;
+          try {
+            aDate =
+                (aTime is Timestamp) ? aTime.toDate() : DateTime.parse(aTime);
+            bDate =
+                (bTime is Timestamp) ? bTime.toDate() : DateTime.parse(bTime);
+          } catch (e) {
+            return 0;
+          }
+          return bDate.compareTo(aDate);
+        });
 
         // Filter reports based on search query and selected severity
         final filteredReports = allReports.where((doc) {

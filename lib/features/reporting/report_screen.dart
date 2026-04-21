@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
@@ -166,26 +167,47 @@ class _ReportScreenState extends State<ReportScreen>
     setState(() => isSubmitting = true);
 
     try {
-      List<String> mediaUrls = [];
-      if (selectedMedia != null) {
-        final url = await CloudinaryService().uploadFile(selectedMedia!);
-        if (url != null) {
-          mediaUrls.add(url);
-        }
+      // Get current user
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        _showSnackBar('Please log in to submit a report.', Colors.red);
+        return;
       }
+
+      // Run media upload and location fetch in parallel
+      List<String> mediaUrls = [];
+      GeoPoint? locationPoint;
+
+      await Future.wait([
+        // Upload media if available
+        if (selectedMedia != null)
+          CloudinaryService().uploadFile(selectedMedia!).then((url) {
+            if (url != null) {
+              mediaUrls.add(url);
+            }
+          }),
+        // Fetch location if sharing location
+        if (shareLocation)
+          _getLocationForSubmission().then((loc) {
+            locationPoint = loc;
+          }),
+      ], eagerError: true);
 
       final String reportId = _generateReportId(selectedCategory!);
 
       final reportData = {
         'reportId': reportId,
+        'userId': user.uid,
+        'userEmail': user.email ?? 'anonymous',
         'category': selectedCategory,
         'description': descriptionController.text.trim(),
         'severity': selectedSeverity,
         'dateTime': incidentDateTime.toIso8601String(),
         'mediaUrls': mediaUrls,
-        'location': (shareLocation && currentLatLng != null)
-            ? GeoPoint(currentLatLng!.latitude, currentLatLng!.longitude)
-            : null,
+        'location': locationPoint ??
+            (currentLatLng != null
+                ? GeoPoint(currentLatLng!.latitude, currentLatLng!.longitude)
+                : null),
         'status': 'Submitted',
         'statusHistory': [
           {
@@ -194,7 +216,7 @@ class _ReportScreenState extends State<ReportScreen>
           }
         ],
         'comments': [],
-        'timestamp': DateTime.now().toIso8601String(),
+        'timestamp': FieldValue.serverTimestamp(),
       };
 
       await _firestore.collection('reports').doc(reportId).set(reportData);
@@ -210,6 +232,19 @@ class _ReportScreenState extends State<ReportScreen>
       if (mounted) {
         setState(() => isSubmitting = false);
       }
+    }
+  }
+
+  Future<GeoPoint?> _getLocationForSubmission() async {
+    try {
+      if (currentLatLng != null) {
+        return GeoPoint(currentLatLng!.latitude, currentLatLng!.longitude);
+      }
+      final Position position = await Geolocator.getCurrentPosition();
+      return GeoPoint(position.latitude, position.longitude);
+    } catch (e) {
+      debugPrint('Error getting location for submission: $e');
+      return null;
     }
   }
 

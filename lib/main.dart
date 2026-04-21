@@ -12,6 +12,7 @@ import 'providers/meetup_provider.dart';
 import 'providers/user_provider.dart';
 import 'providers/theme_provider.dart';
 import 'screens/splash_screen.dart';
+import 'services/sos_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,9 @@ void main() async {
     debugPrint("❌ Firebase setup error: $e");
   }
 
+  // Initialize SOS Service for shake detection
+  await SosService().init();
+
   runApp(const RagaSafeApp());
 }
 
@@ -37,16 +41,16 @@ class RagaSafeApp extends StatelessWidget {
       providers: [
         // Auth Provider
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-        
+
         // User Provider
         ChangeNotifierProvider(create: (_) => UserProvider()),
-        
+
         // Theme Provider
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        
+
         // RagaSafe Providers
         ChangeNotifierProvider(create: (_) => RagaSafeProvider()),
-        
+
         // Peer Buddy & Chat Providers
         ChangeNotifierProvider(create: (_) => BuddyProvider()),
         ChangeNotifierProvider(create: (_) => ChatProvider()),
@@ -58,15 +62,18 @@ class RagaSafeApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'RagaSafe + PeerBuddy',
-            
+
             // Themes with brand colors
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeProvider.themeMode,
-            
+
+            // Navigator key for SOS shake detection
+            navigatorKey: SosService().navigatorKey,
+
             // Entry point
             home: const SplashScreen(),
-            
+
             builder: (context, child) {
               return child!;
             },
