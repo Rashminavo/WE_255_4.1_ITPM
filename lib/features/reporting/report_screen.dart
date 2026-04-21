@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'dart:math';
+import 'dart:io';
 import '../../services/cloudinary_service.dart';
 import '../status/my_reports_screen.dart';
 import '../admin/admin_dashboard.dart';
@@ -27,7 +28,7 @@ class _ReportScreenState extends State<ReportScreen>
 
   // Form State
   String? selectedCategory;
-  String selectedSeverity = 'Low';
+  String? selectedSeverity;
   final descriptionController = TextEditingController();
 
   // DateTime State
@@ -38,7 +39,7 @@ class _ReportScreenState extends State<ReportScreen>
   LatLng? currentLatLng;
   GoogleMapController? mapController;
 
-  XFile? selectedMedia;
+  List<XFile> selectedMediaList = [];
   bool isSubmitting = false;
 
   final List<String> raggingTypes = [
@@ -60,7 +61,7 @@ class _ReportScreenState extends State<ReportScreen>
 
     // Pre-fill media if passed from SOS actions
     if (widget.initialMedia != null) {
-      selectedMedia = widget.initialMedia;
+      selectedMediaList = [widget.initialMedia!];
     }
 
     _getCurrentLocation();
@@ -158,6 +159,10 @@ class _ReportScreenState extends State<ReportScreen>
       _showSnackBar('Please select a category.', Colors.red);
       return;
     }
+    if (selectedSeverity == null) {
+      _showSnackBar('Please select a severity level.', Colors.red);
+      return;
+    }
     if (descriptionController.text.trim().length < 10) {
       _showSnackBar(
           'Provide at least 10 characters in description.', Colors.red);
@@ -179,9 +184,9 @@ class _ReportScreenState extends State<ReportScreen>
       GeoPoint? locationPoint;
 
       await Future.wait([
-        // Upload media if available
-        if (selectedMedia != null)
-          CloudinaryService().uploadFile(selectedMedia!).then((url) {
+        // Upload all media files in parallel
+        for (var media in selectedMediaList)
+          CloudinaryService().uploadFile(media).then((url) {
             if (url != null) {
               mediaUrls.add(url);
             }
@@ -191,7 +196,7 @@ class _ReportScreenState extends State<ReportScreen>
           _getLocationForSubmission().then((loc) {
             locationPoint = loc;
           }),
-      ], eagerError: true);
+      ], eagerError: false);
 
       final String reportId = _generateReportId(selectedCategory!);
 
@@ -315,8 +320,9 @@ class _ReportScreenState extends State<ReportScreen>
               Navigator.pop(ctx);
               setState(() {
                 selectedCategory = null;
+                selectedSeverity = null;
                 descriptionController.clear();
-                selectedMedia = null;
+                selectedMediaList = [];
                 shareLocation = false;
                 incidentDateTime = DateTime.now();
               });
@@ -328,8 +334,9 @@ class _ReportScreenState extends State<ReportScreen>
               Navigator.pop(ctx);
               setState(() {
                 selectedCategory = null;
+                selectedSeverity = null;
                 descriptionController.clear();
-                selectedMedia = null;
+                selectedMediaList = [];
                 shareLocation = false;
                 incidentDateTime = DateTime.now();
               });
@@ -397,35 +404,83 @@ class _ReportScreenState extends State<ReportScreen>
           _sectionTitle('Category'),
           DropdownButtonFormField<String>(
             initialValue: selectedCategory,
-            decoration: _inputDecoration('Select a category'),
+            isExpanded: true,
+            decoration: InputDecoration(
+              hintText: 'Select a category',
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.transparent),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide:
+                    const BorderSide(color: Color(0xFF1D9E75), width: 2),
+              ),
+              filled: true,
+              fillColor: Colors.grey.shade50,
+            ),
             items: raggingTypes
-                .map((t) => DropdownMenuItem(value: t, child: Text(t)))
+                .map((t) => DropdownMenuItem(
+                      value: t,
+                      child: Text(t),
+                    ))
                 .toList(),
             onChanged: (v) => setState(() => selectedCategory = v),
           ),
           const SizedBox(height: 20),
 
           _sectionTitle('Severity Level'),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
             children: severityLevels.map((lvl) {
               final isSelected = selectedSeverity == lvl;
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: ChoiceChip(
-                    label: Text(
-                      lvl,
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: isSelected ? Colors.white : Colors.black,
-                      ),
+              final color = _getSeverityColor(lvl);
+              return GestureDetector(
+                onTap: () => setState(() => selectedSeverity = lvl),
+                child: Card(
+                  elevation: isSelected ? 4 : 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    side: BorderSide(
+                      color: isSelected ? color : Colors.transparent,
+                      width: 2,
                     ),
-                    selected: isSelected,
-                    selectedColor: _getSeverityColor(lvl),
-                    onSelected: (selected) {
-                      if (selected) setState(() => selectedSeverity = lvl);
-                    },
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: isSelected
+                          ? color.withValues(alpha: 0.1)
+                          : Colors.white,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (isSelected)
+                          Icon(Icons.check_circle, color: color, size: 16)
+                        else
+                          const SizedBox(width: 16, height: 16),
+                        const SizedBox(height: 3),
+                        Text(
+                          lvl,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight:
+                                isSelected ? FontWeight.bold : FontWeight.w500,
+                            color: isSelected ? color : Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -443,40 +498,162 @@ class _ReportScreenState extends State<ReportScreen>
           ),
           const SizedBox(height: 20),
 
-          _sectionTitle('Evidence'),
-          InkWell(
-            onTap: () async {
-              final picker = ImagePicker();
-              final file = await picker.pickImage(source: ImageSource.gallery);
-              if (file != null) setState(() => selectedMedia = file);
-            },
-            child: Container(
-              height: 100,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.grey.shade50,
-              ),
-              child: selectedMedia != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        selectedMedia!.path,
-                        fit: BoxFit.cover,
-                        errorBuilder: (c, e, s) =>
-                            const Icon(Icons.file_present),
+          _sectionTitle('Evidence (Max 3 Images)'),
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: selectedMediaList.length >= 3
+                          ? null
+                          : () async {
+                              final picker = ImagePicker();
+                              final file = await picker.pickImage(
+                                  source: ImageSource.camera);
+                              if (file != null) {
+                                setState(() {
+                                  if (selectedMediaList.length < 3) {
+                                    selectedMediaList.add(file);
+                                  }
+                                });
+                              }
+                            },
+                      icon: const Icon(Icons.camera_alt),
+                      label: const Text('Take Photo'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1D9E75),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 14, horizontal: 12),
+                        minimumSize: const Size(0, 50),
                       ),
-                    )
-                  : const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add_photo_alternate, color: Colors.grey),
-                        Text('Upload Evidence',
-                            style: TextStyle(color: Colors.grey))
-                      ],
                     ),
-            ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: selectedMediaList.length >= 3
+                          ? null
+                          : () async {
+                              final picker = ImagePicker();
+                              final file = await picker.pickImage(
+                                  source: ImageSource.gallery);
+                              if (file != null) {
+                                setState(() {
+                                  if (selectedMediaList.length < 3) {
+                                    selectedMediaList.add(file);
+                                  }
+                                });
+                              }
+                            },
+                      icon: const Icon(Icons.image),
+                      label: const Text('Upload from Gallery'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1D9E75),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 14, horizontal: 12),
+                        minimumSize: const Size(0, 50),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              if (selectedMediaList.isEmpty)
+                Container(
+                  height: 120,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300, width: 2),
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.grey.shade50,
+                  ),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.add_photo_alternate,
+                          color: Colors.grey, size: 36),
+                      SizedBox(height: 8),
+                      Text('No images selected',
+                          style: TextStyle(color: Colors.grey, fontSize: 14))
+                    ],
+                  ),
+                )
+              else
+                GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: selectedMediaList.length,
+                    itemBuilder: (context, index) {
+                      return Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: !kIsWeb
+                                ? Image.file(
+                                    File(selectedMediaList[index].path),
+                                    fit: BoxFit.cover,
+                                  )
+                                : Container(
+                                    color: Colors.grey.shade300,
+                                    child: const Center(
+                                      child: Icon(
+                                        Icons.image,
+                                        size: 32,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                          Positioned(
+                            top: 4,
+                            right: 4,
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedMediaList.removeAt(index);
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.red,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                          Colors.black.withValues(alpha: 0.3),
+                                      blurRadius: 4,
+                                    )
+                                  ],
+                                ),
+                                padding: const EdgeInsets.all(4),
+                                child: const Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+            ],
           ),
           const SizedBox(height: 20),
 
@@ -605,13 +782,13 @@ class _ReportScreenState extends State<ReportScreen>
   Color _getSeverityColor(String lvl) {
     switch (lvl) {
       case 'Low':
-        return Colors.green;
+        return const Color(0xFF4CAF50); // Green
       case 'Medium':
-        return Colors.orange;
+        return const Color(0xFFFFC107); // Yellow
       case 'High':
-        return Colors.red;
+        return const Color(0xFFFF9800); // Orange
       case 'Critical':
-        return Colors.brown;
+        return const Color(0xFFE53935); // Red
       default:
         return Colors.grey;
     }
