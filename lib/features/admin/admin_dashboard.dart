@@ -338,64 +338,24 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Report ID, severity, and status
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // Report ID and Category
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                reportId,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  fontFamily: 'monospace',
-                                  color: Color(0xFF1D9E75),
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                category,
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w500),
-                              ),
-                            ],
+                        Text(
+                          reportId,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            fontFamily: 'monospace',
+                            color: Color(0xFF1D9E75),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: severityColor.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: severityColor, width: 1),
-                          ),
-                          child: Text(
-                            severity,
-                            style: TextStyle(
-                                color: severityColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: statusColor.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            status,
-                            style: TextStyle(
-                                color: statusColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11),
-                          ),
+                        const SizedBox(height: 4),
+                        Text(
+                          category,
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -442,9 +402,26 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     ),
                     const SizedBox(height: 12),
 
-                    // Status Update Dropdown Menu
+                    // Bottom Row: Severity and Status
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: severityColor.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: severityColor, width: 1),
+                          ),
+                          child: Text(
+                            severity,
+                            style: TextStyle(
+                                color: severityColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11),
+                          ),
+                        ),
                         PopupMenuButton<String>(
                           onSelected: (newStatus) {
                             if (newStatus != status) {
@@ -479,30 +456,17 @@ class _AdminDashboardState extends State<AdminDashboard> {
                               .toList(),
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
+                                horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color(0xFF1D9E75),
-                              ),
-                              borderRadius: BorderRadius.circular(8),
+                              color: statusColor.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Icon(Icons.edit,
-                                    size: 14, color: Color(0xFF1D9E75)),
-                                SizedBox(width: 6),
-                                Text(
-                                  'Change Status',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xFF1D9E75),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
+                            child: Text(
+                              status,
+                              style: TextStyle(
+                                  color: statusColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11),
                             ),
                           ),
                         ),

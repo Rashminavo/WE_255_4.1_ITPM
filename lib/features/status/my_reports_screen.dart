@@ -163,80 +163,13 @@ class _MyReportsScreenState extends State<MyReportsScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Top Row: Report ID and Icons
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  Clipboard.setData(
-                                      ClipboardData(text: reportId));
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content:
-                                          Text('Report ID copied to clipboard'),
-                                      duration: Duration(seconds: 2),
-                                      backgroundColor: Color(0xFF1D9E75),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF1D9E75)
-                                        .withValues(alpha: 0.05),
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                      color: const Color(0xFF1D9E75),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        reportId,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                          fontFamily: 'monospace',
-                                          color: Color(0xFF1D9E75),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 6),
-                                      const Icon(
-                                        Icons.copy,
-                                        size: 14,
-                                        color: Color(0xFF1D9E75),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            if (mediaUrls.isNotEmpty)
-                              const Padding(
-                                padding: EdgeInsets.only(right: 8),
-                                child: Icon(Icons.image,
-                                    size: 18, color: Colors.blue),
-                              ),
-                            if (hasLocation)
-                              const Icon(Icons.location_on,
-                                  size: 18, color: Color(0xFF1D9E75)),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
                         // Category
                         Text(
                           category,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 4),
                         // Date & Time
                         Row(
                           children: [
@@ -250,6 +183,75 @@ class _MyReportsScreenState extends State<MyReportsScreen> {
                                   : 'Unknown Date',
                               style: const TextStyle(
                                   color: Colors.grey, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        // Bottom Row: Report ID, Image, Location Icons
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: reportId));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Report ID copied to clipboard'),
+                                    duration: Duration(seconds: 2),
+                                    backgroundColor: Color(0xFF1D9E75),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF1D9E75)
+                                      .withValues(alpha: 0.05),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: const Color(0xFF1D9E75),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      reportId,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 11,
+                                        fontFamily: 'monospace',
+                                        color: Color(0xFF1D9E75),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    const Icon(
+                                      Icons.copy,
+                                      size: 12,
+                                      color: Color(0xFF1D9E75),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                if (mediaUrls.isNotEmpty)
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 8),
+                                    child: Icon(Icons.image,
+                                        size: 16, color: Colors.blue),
+                                  ),
+                                if (hasLocation)
+                                  const Icon(Icons.location_on,
+                                      size: 16, color: Color(0xFF1D9E75)),
+                              ],
                             ),
                           ],
                         ),

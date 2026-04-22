@@ -404,7 +404,7 @@ class _ReportScreenState extends State<ReportScreen>
           _sectionTitle('Category'),
           DropdownButtonFormField<String>(
             initialValue: selectedCategory,
-            isExpanded: true,
+            isExpanded: false,
             decoration: InputDecoration(
               hintText: 'Select a category',
               contentPadding:
@@ -425,6 +425,7 @@ class _ReportScreenState extends State<ReportScreen>
               filled: true,
               fillColor: Colors.grey.shade50,
             ),
+            dropdownColor: Colors.white,
             items: raggingTypes
                 .map((t) => DropdownMenuItem(
                       value: t,
