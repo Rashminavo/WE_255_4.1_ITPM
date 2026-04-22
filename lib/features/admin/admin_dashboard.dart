@@ -44,6 +44,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF1D9E75),
         elevation: 0,
+        toolbarHeight: 50,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -338,24 +339,49 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Report ID and Category
-                    Column(
+                    // Report ID, Category, and Severity (top row)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          reportId,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            fontFamily: 'monospace',
-                            color: Color(0xFF1D9E75),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                reportId,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  fontFamily: 'monospace',
+                                  color: Color(0xFF1D9E75),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                category,
+                                style: const TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.w500),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          category,
-                          style: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w500),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: severityColor.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: severityColor, width: 1),
+                          ),
+                          child: Text(
+                            severity,
+                            style: TextStyle(
+                                color: severityColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10),
+                          ),
                         ),
                       ],
                     ),
@@ -402,26 +428,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     ),
                     const SizedBox(height: 12),
 
-                    // Bottom Row: Severity and Status
+                    // Bottom Row: Status Only
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: severityColor.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: severityColor, width: 1),
-                          ),
-                          child: Text(
-                            severity,
-                            style: TextStyle(
-                                color: severityColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11),
-                          ),
-                        ),
                         PopupMenuButton<String>(
                           onSelected: (newStatus) {
                             if (newStatus != status) {
@@ -459,7 +469,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                 horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
                               color: statusColor.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
                               status,
