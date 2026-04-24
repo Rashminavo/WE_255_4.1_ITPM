@@ -2,6 +2,7 @@
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../services/booking_service.dart';
+import '../features/admin/admin_dashboard.dart' as reports_admin;
 import 'counselor_screen.dart';
 import 'login_screen.dart';
 
@@ -23,10 +24,10 @@ class _AdminDashboardState extends State<AdminDashboard>
 
   String _searchQuery = '';
   bool _isLoading = true;
-  int _selectedTab = 0; // 0: Bookings, 1: Analytics, 2: Counselors
+  int _selectedTab = 0; // 0: Bookings, 1: Analytics, 2: Counselors, 3: Reports
   String _selectedStatusFilter = 'All';
 
-  final List<String> _tabs = ['Bookings', 'Analytics', 'Counselors'];
+  final List<String> _tabs = ['Bookings', 'Analytics', 'Counselors', 'Reports'];
   final List<String> _statusFilters = [
     'All',
     'Pending',
@@ -257,6 +258,7 @@ class _AdminDashboardState extends State<AdminDashboard>
                           _buildBookingsContent(filteredBookings),
                           _buildAnalyticsContent(),
                           _buildCounselorsContent(),
+                          const reports_admin.AdminDashboard(),
                         ],
                       ),
                     ),
