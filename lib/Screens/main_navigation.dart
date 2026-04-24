@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../core/auth/app_role.dart';
+import '../core/auth/role_home_resolver.dart';
 import 'dashboard_screen.dart';
 import 'counselor_screen.dart';
 import 'quiz_screen.dart';
@@ -36,37 +40,72 @@ class _MainNavigationState extends State<MainNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: const Color(0xFF1D9E75),
-        unselectedItemColor: Colors.grey,
-        onTap: _onTabTapped,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
-              label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.book_outlined),
-              activeIcon: Icon(Icons.book),
-              label: 'Learn'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.report_gmailerrorred),
-              activeIcon: Icon(Icons.report),
-              label: 'Report'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.people_outline),
-              activeIcon: Icon(Icons.people),
-              label: 'Buddy'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.psychology_outlined),
-              activeIcon: Icon(Icons.psychology),
-              label: 'Support'),
-        ],
-      ),
+    return FutureBuilder<AppRole>(
+      future: _resolveCurrentRole(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final currentRole = snapshot.data ?? AppRole.student;
+
+        if (currentRole != AppRole.student) {
+          return RoleHomeResolver.resolveHome(currentRole);
+        }
+
+        return Scaffold(
+          body: _screens[_currentIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: const Color(0xFF1D9E75),
+            unselectedItemColor: Colors.grey,
+            onTap: _onTabTapped,
+            items: const [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home_outlined),
+                  activeIcon: Icon(Icons.home),
+                  label: 'Home'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.book_outlined),
+                  activeIcon: Icon(Icons.book),
+                  label: 'Learn'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.report_gmailerrorred),
+                  activeIcon: Icon(Icons.report),
+                  label: 'Report'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.people_outline),
+                  activeIcon: Icon(Icons.people),
+                  label: 'Buddy'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.psychology_outlined),
+                  activeIcon: Icon(Icons.psychology),
+                  label: 'Support'),
+            ],
+          ),
+        );
+      },
     );
+  }
+
+  Future<AppRole> _resolveCurrentRole() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        return AppRole.student;
+      }
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      final userData = userDoc.data();
+      return AppRoleX.fromString(userData?['role'] as String?);
+    } catch (_) {
+      return AppRole.student;
+    }
   }
 }

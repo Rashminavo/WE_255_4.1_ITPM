@@ -1,6 +1,10 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../core/auth/app_role.dart';
+import '../core/auth/role_home_resolver.dart';
 import '../services/booking_service.dart';
 import '../features/admin/admin_dashboard.dart' as reports_admin;
 import 'counselor_screen.dart';
@@ -236,37 +240,72 @@ class _AdminDashboardState extends State<AdminDashboard>
 
   @override
   Widget build(BuildContext context) {
-    final filteredBookings = getFilteredBookings();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return FutureBuilder<AppRole>(
+      future: _resolveCurrentRole(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
-      child: Scaffold(
-        backgroundColor:
-            isDark ? const Color(0xFF0D1F1A) : const Color(0xFFF0F4F3),
-        body: _isLoading
-            ? _buildLoadingScreen()
-            : SafeArea(
-                child: Column(
-                  children: [
-                    _buildAnimatedAppBar(),
-                    _buildModernTabBar(),
-                    Expanded(
-                      child: IndexedStack(
-                        index: _selectedTab,
+        final currentRole = snapshot.data ?? AppRole.student;
+        final filteredBookings = getFilteredBookings();
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+
+        return RoleGuard(
+          currentRole: currentRole,
+          allowedRoles: const {AppRole.admin},
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value:
+                isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+            child: Scaffold(
+              backgroundColor:
+                  isDark ? const Color(0xFF0D1F1A) : const Color(0xFFF0F4F3),
+              body: _isLoading
+                  ? _buildLoadingScreen()
+                  : SafeArea(
+                      child: Column(
                         children: [
-                          _buildBookingsContent(filteredBookings),
-                          _buildAnalyticsContent(),
-                          _buildCounselorsContent(),
-                          const reports_admin.AdminDashboard(),
+                          _buildAnimatedAppBar(),
+                          _buildModernTabBar(),
+                          Expanded(
+                            child: IndexedStack(
+                              index: _selectedTab,
+                              children: [
+                                _buildBookingsContent(filteredBookings),
+                                _buildAnalyticsContent(),
+                                _buildCounselorsContent(),
+                                const reports_admin.AdminDashboard(),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-      ),
+            ),
+          ),
+        );
+      },
     );
+  }
+
+  Future<AppRole> _resolveCurrentRole() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        return AppRole.student;
+      }
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      final userData = userDoc.data();
+      return AppRoleX.fromString(userData?['role'] as String?);
+    } catch (_) {
+      return AppRole.student;
+    }
   }
 
   Widget _buildLoadingScreen() {

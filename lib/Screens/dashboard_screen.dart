@@ -2,6 +2,8 @@
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../providers/user_provider.dart';
 import 'profile_screen.dart';
 import 'notification_screen.dart';
@@ -146,6 +148,37 @@ class _DashboardScreenState extends State<DashboardScreen>
     return "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
   }
 
+  Future<String> _getCurrentUserName() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return 'Student';
+    }
+
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      final data = doc.data();
+
+      final name = (data?['name'] as String?)?.trim();
+      if (name != null && name.isNotEmpty) {
+        return name;
+      }
+
+      final displayName = user.displayName?.trim();
+      if (displayName != null && displayName.isNotEmpty) {
+        return displayName;
+      }
+    } catch (_) {
+      // Fall back to auth profile below.
+    }
+
+    return user.displayName?.trim().isNotEmpty == true
+        ? user.displayName!.trim()
+        : 'Student';
+  }
+
   void _handleSOS() {
     HapticFeedback.heavyImpact();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -275,8 +308,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
-                          border:
-                              Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                          border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.3)),
                         ),
                         child: _getImageProvider(userProvider) != null
                             ? CircleAvatar(
@@ -301,12 +334,22 @@ class _DashboardScreenState extends State<DashboardScreen>
                                 style: TextStyle(
                                     color: Colors.white.withValues(alpha: 0.8),
                                     fontSize: 11)),
-                            Text(userProvider.fullName,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                            FutureBuilder<String>(
+                              future: _getCurrentUserName(),
+                              builder: (context, snapshot) {
+                                final displayName =
+                                    snapshot.data ?? userProvider.fullName;
+                                return Text(
+                                  displayName,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
-                                    fontWeight: FontWeight.bold)),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -429,8 +472,9 @@ class _DashboardScreenState extends State<DashboardScreen>
                                     color: (_isCheckedIn
                                             ? const Color(0xFF4CAF50)
                                             : Colors.white)
-                                        .withValues(alpha: 0.4 +
-                                            (_pulseController.value * 0.3)),
+                                        .withValues(
+                                            alpha: 0.4 +
+                                                (_pulseController.value * 0.3)),
                                     blurRadius: 15,
                                     spreadRadius: 2,
                                   ),
@@ -718,14 +762,16 @@ class _DashboardScreenState extends State<DashboardScreen>
                       ),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
-                          color: const Color(0xFF1D9E75).withValues(alpha: 0.2)),
+                          color:
+                              const Color(0xFF1D9E75).withValues(alpha: 0.2)),
                     ),
                     child: Row(
                       children: [
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1D9E75).withValues(alpha: 0.2),
+                            color:
+                                const Color(0xFF1D9E75).withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(Icons.lightbulb_outline,
@@ -935,4 +981,3 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 }
-

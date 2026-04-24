@@ -4,7 +4,7 @@ class UserModel {
   final String name;
   final String phone;
   final String photoUrl;
-  final String role; // 'user', 'admin', 'counselor'
+  final String role; // 'admin', 'student', 'counselor', 'peer_buddy'
   final DateTime createdAt;
   final DateTime lastLogin;
   final List<String> skills;
@@ -84,7 +84,7 @@ class UserModel {
       name: map['name'] ?? '',
       phone: map['phone'] ?? '',
       photoUrl: map['photoUrl'] ?? '',
-      role: map['role'] ?? 'user',
+      role: map['role'] ?? 'student',
       createdAt: map['createdAt'] is String
           ? DateTime.parse(map['createdAt'])
           : DateTime.now(),

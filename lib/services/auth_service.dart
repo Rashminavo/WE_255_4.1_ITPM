@@ -1,21 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import '../core/auth/app_role.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Sign up
-  Future<User?> signUp(String email, String password, String name, String studentId) async {
+  Future<User?> signUp(
+      String email, String password, String name, String studentId) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      
+
       User? user = result.user;
-      
+
       // Also store user in Firestore Users collection
       if (user != null) {
         await _firestore.collection('users').doc(user.uid).set({
@@ -23,7 +25,7 @@ class AuthService {
           'email': email,
           'name': name,
           'studentId': studentId,
-          'role': 'student', // default role
+          'role': AppRole.student.value,
           'safetyScore': 85,
           'createdAt': FieldValue.serverTimestamp(),
         });
@@ -44,11 +46,11 @@ class AuthService {
       );
 
       // Force admin role in database if logging in as admin
-      if (result.user != null && 
-          (email.toLowerCase() == 'admin@admin.com' || 
-           email.toLowerCase() == 'admin@ragsafe.com')) {
+      if (result.user != null &&
+          (email.toLowerCase() == 'admin@admin.com' ||
+              email.toLowerCase() == 'admin@ragsafe.com')) {
         await _firestore.collection('users').doc(result.user!.uid).set({
-          'role': 'admin',
+          'role': AppRole.admin.value,
           'email': email,
         }, SetOptions(merge: true));
       }
@@ -71,20 +73,27 @@ class AuthService {
 
   // Auth State Stream
   Stream<User?> get user => _auth.authStateChanges();
-  
+
   // Current user
   User? get currentUser => _auth.currentUser;
 
   // Get user role from Firestore
   Future<String> getUserRole(String uid) async {
     try {
-      DocumentSnapshot doc = await _firestore.collection('users').doc(uid).get();
+      DocumentSnapshot doc =
+          await _firestore.collection('users').doc(uid).get();
       if (doc.exists && doc.data() != null) {
-        return (doc.data() as Map<String, dynamic>)['role'] ?? 'student';
+        return (doc.data() as Map<String, dynamic>)['role'] ??
+            AppRole.student.value;
       }
     } catch (e) {
       debugPrint('Error getting user role: $e');
     }
-    return 'student'; // Default fallback
+    return AppRole.student.value;
+  }
+
+  Future<AppRole> getUserAppRole(String uid) async {
+    final role = await getUserRole(uid);
+    return AppRoleX.fromString(role);
   }
 }

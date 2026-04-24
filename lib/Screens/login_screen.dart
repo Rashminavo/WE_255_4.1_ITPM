@@ -1,8 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import 'main_navigation.dart';
 import 'register_screen.dart';
-import 'admin_dashboard.dart'; // Make sure this import is present
+import '../core/auth/role_home_resolver.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -61,25 +60,16 @@ class _LoginScreenState extends State<LoginScreen>
         final user = await _authService.signIn(email, password);
 
         if (mounted && user != null) {
-          // Fetch Role
-          String role = await _authService.getUserRole(user.uid);
+          final role = await _authService.getUserAppRole(user.uid);
 
           if (!mounted) return;
 
-          // Route based on role
-          if (role == 'admin' ||
-              email.toLowerCase() == 'admin@admin.com' ||
-              email.toLowerCase() == 'admin@ragsafe.com') {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const AdminDashboard()),
-            );
-          } else {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const MainNavigation()),
-            );
-          }
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RoleHomeResolver.resolveHome(role),
+            ),
+          );
         }
       } catch (e) {
         if (mounted) {

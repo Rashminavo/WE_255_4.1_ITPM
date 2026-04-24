@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'screens/login_screen.dart';
-import 'widgets/main_navigation.dart';
-import 'features/admin/admin_dashboard.dart';
+import 'core/auth/app_role.dart';
+import 'core/auth/role_home_resolver.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
@@ -36,18 +36,14 @@ class AuthScreen extends StatelessWidget {
 
               // Check if user document exists and handle role
               if (roleSnapshot.hasData && roleSnapshot.data!.exists) {
-                final userData = roleSnapshot.data!.data() as Map<String, dynamic>;
-                final bool isAdmin = userData['isAdmin'] ?? false;
-
-                if (isAdmin) {
-                  return const AdminDashboard();
-                } else {
-                  return const MainNavigation();
-                }
+                final userData =
+                    roleSnapshot.data!.data() as Map<String, dynamic>;
+                final appRole =
+                    AppRoleX.fromString(userData['role'] as String?);
+                return RoleHomeResolver.resolveHome(appRole);
               }
 
-              // Fallback for students if no detailed document is found
-              return const MainNavigation();
+              return RoleHomeResolver.resolveHome(AppRole.student);
             },
           );
         }

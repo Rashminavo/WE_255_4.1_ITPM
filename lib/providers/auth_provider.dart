@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../core/auth/app_role.dart';
 import '../core/models/user_model.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -12,6 +13,7 @@ class AuthProvider extends ChangeNotifier {
   String? _error;
 
   UserModel? get user => _user;
+  AppRole get currentRole => AppRoleX.fromString(_user?.role);
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isLoggedIn => _user != null;
@@ -72,7 +74,7 @@ class AuthProvider extends ChangeNotifier {
         name: name,
         phone: phone,
         photoUrl: '',
-        role: 'user',
+        role: 'student',
         createdAt: DateTime.now(),
         lastLogin: DateTime.now(),
         skills: [],
@@ -116,7 +118,10 @@ class AuthProvider extends ChangeNotifier {
       );
 
       // Update last login
-      await _firestore.collection('users').doc(userCredential.user!.uid).update({
+      await _firestore
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .update({
         'lastLogin': DateTime.now().toIso8601String(),
       });
 

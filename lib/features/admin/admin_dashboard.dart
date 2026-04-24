@@ -1,7 +1,11 @@
 // lib/features/admin/admin_dashboard.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import '../../core/auth/app_role.dart';
+import '../../core/auth/role_home_resolver.dart';
+import '../reports/data/report_repository.dart';
 import '../status/status_tracker_screen.dart';
 
 class AdminDashboard extends StatefulWidget {
@@ -15,7 +19,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   final searchController = TextEditingController();
   String searchQuery = '';
   String? selectedSeverity;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final ReportRepository _reportRepository = ReportRepository();
 
   final Map<String, Color> categoryColors = {
     'Verbal Harassment': Colors.orange,
@@ -40,49 +44,87 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Search Bar
-            TextField(
-              controller: searchController,
-              onChanged: (value) =>
-                  setState(() => searchQuery = value.toLowerCase()),
-              decoration: InputDecoration(
-                hintText: 'Search by Report ID, Category, or Keyword...',
-                prefixIcon: const Icon(Icons.search, color: Color(0xFF1D9E75)),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    return FutureBuilder<AppRole>(
+      future: _resolveCurrentRole(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final currentRole = snapshot.data ?? AppRole.student;
+
+        return RoleGuard(
+          currentRole: currentRole,
+          allowedRoles: const {AppRole.admin},
+          child: Scaffold(
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Search Bar
+                  TextField(
+                    controller: searchController,
+                    onChanged: (value) =>
+                        setState(() => searchQuery = value.toLowerCase()),
+                    decoration: InputDecoration(
+                      hintText: 'Search by Report ID, Category, or Keyword...',
+                      prefixIcon:
+                          const Icon(Icons.search, color: Color(0xFF1D9E75)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Severity Filter Cards
+                  const Text('Filter by Severity',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  const SizedBox(height: 12),
+                  _buildSeverityCards(),
+                  const SizedBox(height: 24),
+
+                  // Reports List
+                  const Text('Reports',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  const SizedBox(height: 12),
+                  _buildReportsList(),
+                ],
               ),
             ),
-            const SizedBox(height: 24),
-
-            // Severity Filter Cards
-            const Text('Filter by Severity',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-            const SizedBox(height: 12),
-            _buildSeverityCards(),
-            const SizedBox(height: 24),
-
-            // Reports List
-            const Text('Reports',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-            const SizedBox(height: 12),
-            _buildReportsList(),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
+  }
+
+  Future<AppRole> _resolveCurrentRole() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        return AppRole.student;
+      }
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      final userData = userDoc.data();
+      return AppRoleX.fromString(userData?['role'] as String?);
+    } catch (_) {
+      return AppRole.student;
+    }
   }
 
   Widget _buildSeverityCards() {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('reports').snapshots(),
+      stream: _reportRepository.streamReports(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const SizedBox(
@@ -194,7 +236,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   Widget _buildReportsList() {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('reports').snapshots(),
+      stream: _reportRepository.streamReports(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -506,15 +548,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   Future<void> _updateReportStatus(String reportId, String newStatus) async {
     try {
-      await _firestore.collection('reports').doc(reportId).update({
-        'status': newStatus,
-        'statusHistory': FieldValue.arrayUnion([
-          {
-            'status': newStatus,
-            'timestamp': DateTime.now().toIso8601String(),
-          }
-        ])
-      });
+      await _reportRepository.updateReportStatus(
+        reportId: reportId,
+        status: newStatus,
+      );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
