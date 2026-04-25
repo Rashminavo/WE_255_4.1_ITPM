@@ -2,11 +2,12 @@
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../providers/theme_provider.dart';
 import '../providers/user_provider.dart';
-import '../main.dart';
+import 'login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -1007,12 +1008,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                     ),
-                                    onPressed: () {
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
+                                    onPressed: () async {
+                                      await FirebaseAuth.instance.signOut();
+                                      if (!context.mounted) {
+                                        return;
+                                      }
+                                      Navigator.of(context).pushAndRemoveUntil(
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                const RagaSafeApp()),
+                                          builder: (context) =>
+                                              const LoginScreen(),
+                                        ),
                                         (route) => false,
                                       );
                                     },

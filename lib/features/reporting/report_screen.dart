@@ -12,7 +12,6 @@ import 'dart:math';
 import 'dart:io';
 import '../../services/cloudinary_service.dart';
 import '../status/my_reports_screen.dart';
-import '../admin/admin_dashboard.dart';
 
 class ReportScreen extends StatefulWidget {
   final XFile? initialMedia;
@@ -57,7 +56,7 @@ class _ReportScreenState extends State<ReportScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
 
     // Pre-fill media if passed from SOS actions
     if (widget.initialMedia != null) {
@@ -364,7 +363,6 @@ class _ReportScreenState extends State<ReportScreen>
           tabs: const [
             Tab(text: "New", icon: Icon(Icons.add_alert)),
             Tab(text: "My Reports", icon: Icon(Icons.history)),
-            Tab(text: "Admin", icon: Icon(Icons.admin_panel_settings)),
           ],
         ),
       ),
@@ -373,7 +371,6 @@ class _ReportScreenState extends State<ReportScreen>
         children: [
           _buildReportForm(),
           const MyReportsScreen(),
-          _buildAdminView(),
         ],
       ),
     );
@@ -793,9 +790,5 @@ class _ReportScreenState extends State<ReportScreen>
       default:
         return Colors.grey;
     }
-  }
-
-  Widget _buildAdminView() {
-    return const AdminDashboard();
   }
 }

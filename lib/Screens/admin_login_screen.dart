@@ -675,56 +675,131 @@ class _AdminDashboardState extends State<AdminDashboard>
   }
 
   void _showReportDetails(Map<String, dynamic> report) {
+    final status = report['status']?.toString() ?? 'Pending';
+    final reportId = report['id']?.toString() ?? '-';
+    final type = report['type']?.toString() ?? 'Unknown';
+    final location = report['location']?.toString() ?? 'Not specified';
+    final reportedBy = report['reportedBy']?.toString() ?? 'Unknown';
+    final description = report['description']?.toString() ??
+        'Student reported suspicious behavior near Block D. Multiple students witnessed the incident. Security has been notified.';
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: [
-            Icon(Icons.report, color: _getStatusColor(report['status'])),
-            const SizedBox(width: 8),
-            Text('Report Details: ${report['id']}'),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
+        titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildDetailRow('Type', report['type']),
-            const SizedBox(height: 8),
-            _buildDetailRow('Location', report['location']),
-            const SizedBox(height: 8),
-            _buildDetailRow('Reported By', report['reportedBy']),
-            const SizedBox(height: 8),
-            _buildDetailRow('Date',
-                DateFormat('MMM dd, yyyy hh:mm a').format(report['date'])),
-            const SizedBox(height: 8),
-            _buildDetailRow('Status', report['status']),
-            const SizedBox(height: 12),
-            const Text(
-              'Description:',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Icon(Icons.report, color: _getStatusColor(status)),
+                const SizedBox(width: 8),
+                const Text('Report Details'),
+              ],
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 10),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8FAF8),
-                borderRadius: BorderRadius.circular(12),
+                color: const Color(0xFF1D9E75).withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: const Color(0xFF1D9E75)),
               ),
-              child: const Text(
-                'Student reported suspicious behavior near Block D. Multiple students witnessed the incident. Security has been notified.',
-                style: TextStyle(fontSize: 13),
+              child: SelectableText(
+                'ID: $reportId',
+                style: const TextStyle(
+                  fontFamily: 'monospace',
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF1D9E75),
+                ),
               ),
             ),
           ],
+        ),
+        content: SizedBox(
+          width: 420,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                child: Column(
+                  children: [
+                    _buildDetailRow('Type', type),
+                    const SizedBox(height: 8),
+                    _buildDetailRow('Location', location),
+                    const SizedBox(height: 8),
+                    _buildDetailRow('Reported By', reportedBy),
+                    const SizedBox(height: 8),
+                    _buildDetailRow(
+                      'Date',
+                      DateFormat('MMM dd, yyyy hh:mm a').format(report['date']),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Text(
+                          'Status',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                        const Spacer(),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(
+                            color:
+                                _getStatusColor(status).withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            status,
+                            style: TextStyle(
+                              color: _getStatusColor(status),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Description',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              ),
+              const SizedBox(height: 6),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8FAF8),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                child: Text(
+                  description,
+                  style: const TextStyle(fontSize: 13, height: 1.45),
+                ),
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Close'),
           ),
-          if (report['status'] == 'Pending')
+          if (status == 'Pending')
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);

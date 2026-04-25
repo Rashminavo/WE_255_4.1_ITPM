@@ -73,6 +73,10 @@ class _BuddyRequestsScreenState extends State<BuddyRequestsScreen> {
               final user1Id = matchDoc['user1Id'] as String;
               final matchScore = matchDoc['matchScore'] as int? ?? 0;
 
+              if (user1Id.trim().isEmpty) {
+                return const SizedBox.shrink();
+              }
+
               // Get requester name from user1Id
               return FutureBuilder<DocumentSnapshot>(
                 future: FirebaseFirestore.instance

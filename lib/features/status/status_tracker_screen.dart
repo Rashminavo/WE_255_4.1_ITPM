@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class StatusTrackerScreen extends StatefulWidget {
   final String? initialReportId;
@@ -15,6 +17,7 @@ class StatusTrackerScreen extends StatefulWidget {
 }
 
 class _StatusTrackerScreenState extends State<StatusTrackerScreen> {
+  GoogleMapController? mapController;
   late String reportId;
   final commentController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -36,6 +39,7 @@ class _StatusTrackerScreenState extends State<StatusTrackerScreen> {
 
   @override
   void dispose() {
+    mapController?.dispose();
     commentController.dispose();
     super.dispose();
   }
@@ -190,131 +194,37 @@ class _StatusTrackerScreenState extends State<StatusTrackerScreen> {
                 }
 
                 return SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Report ID Header
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1D9E75).withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: const Color(0xFF1D9E75), width: 2),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Report ID',
-                                style: TextStyle(
-                                    color: Colors.grey, fontSize: 12)),
-                            const SizedBox(height: 4),
-                            SelectableText(
-                              reportId,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                fontFamily: 'monospace',
-                                color: Color(0xFF1D9E75),
-                              ),
-                            ),
-                          ],
-                        ),
+                      _buildReportHeaderCard(
+                        reportId: reportId,
+                        status: status,
+                        severity: severity,
                       ),
                       const SizedBox(height: 20),
 
-                      // Report Details
-                      _detailCard('Category', category),
-                      _detailCard('Severity', severity),
-                      _detailCard(
-                        'Date & Time',
-                        parsedDate != null
-                            ? DateFormat('EEEE, MMMM d, yyyy hh:mm a')
-                                .format(parsedDate)
-                            : 'Unknown',
+                      _buildReportInfoCard(
+                        category: category,
+                        parsedDate: parsedDate,
                       ),
                       const SizedBox(height: 20),
 
-                      // Description
-                      const Text('Description',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 14)),
-                      const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(description,
-                            style: const TextStyle(fontSize: 13, height: 1.5)),
-                      ),
+                      _buildDescriptionCard(description),
                       const SizedBox(height: 20),
 
-                      // Media
-                      if (mediaUrls.isNotEmpty) ...[
-                        const Text('Evidence',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14)),
-                        const SizedBox(height: 8),
-                        SizedBox(
-                          height: 120,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: mediaUrls.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: const EdgeInsets.only(right: 10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  border:
-                                      Border.all(color: Colors.grey.shade300),
-                                ),
-                                clipBehavior: Clip.antiAlias,
-                                child: Image.network(
-                                  mediaUrls[index] as String,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (c, e, s) => const Icon(
-                                      Icons.broken_image,
-                                      color: Colors.grey),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                      ],
+                      if (mediaUrls.isNotEmpty)
+                        _buildEvidenceCard(mediaUrls)
+                      else
+                        _buildNoEvidenceCard(),
+                      const SizedBox(height: 20),
 
-                      // Location
-                      if (location != null) ...[
-                        const Text('Location',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14)),
-                        const SizedBox(height: 8),
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.grey.shade50,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Icon(Icons.location_on,
-                                  color: Color(0xFF1D9E75), size: 20),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Latitude: ${location.latitude.toStringAsFixed(6)}\nLongitude: ${location.longitude.toStringAsFixed(6)}',
-                                style: const TextStyle(
-                                    fontSize: 12, color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                      ],
+                      if (location != null)
+                        _buildLocationCard(location)
+                      else
+                        _buildNoLocationCard(),
+                      const SizedBox(height: 20),
 
                       // Timeline
                       const Text('Status Timeline',
@@ -366,18 +276,486 @@ class _StatusTrackerScreenState extends State<StatusTrackerScreen> {
     );
   }
 
-  Widget _detailCard(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          Text('$label: ',
-              style:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-          Expanded(
-              child: Text(value,
-                  style: const TextStyle(fontSize: 13, color: Colors.grey))),
+  Widget _buildReportHeaderCard({
+    required String reportId,
+    required String status,
+    required String severity,
+  }) {
+    final safeId = reportId.isEmpty
+        ? '-'
+        : (reportId.length <= 12 ? reportId : reportId.substring(0, 12));
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF1D9E75), Color(0xFF159B69)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1D9E75).withValues(alpha: 0.22),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
         ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Report ID',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.4,
+            ),
+          ),
+          const SizedBox(height: 8),
+          SelectableText(
+            '#${safeId.toUpperCase()}',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Colors.white,
+              fontFamily: 'monospace',
+            ),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _buildStatusChip(status),
+              _buildSeverityChip(severity),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReportInfoCard({
+    required String category,
+    required DateTime? parsedDate,
+  }) {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Report Information',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 12),
+            _buildInfoRow(
+              icon: Icons.category_outlined,
+              label: 'Category',
+              value: category,
+              valueColor: const Color(0xFF1D9E75),
+            ),
+            const SizedBox(height: 10),
+            _buildInfoRow(
+              icon: Icons.access_time,
+              label: 'Date & Time',
+              value: parsedDate != null
+                  ? DateFormat('MMM d, yyyy • hh:mm a').format(parsedDate)
+                  : 'Unknown',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDescriptionCard(String description) {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.description_outlined,
+                    size: 20, color: Colors.grey.shade700),
+                const SizedBox(width: 8),
+                const Text(
+                  'Description',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Text(
+                description.isEmpty ? 'No description provided' : description,
+                style: TextStyle(
+                  fontSize: 14,
+                  height: 1.5,
+                  color: description.isEmpty
+                      ? Colors.grey.shade500
+                      : Colors.black87,
+                  fontStyle:
+                      description.isEmpty ? FontStyle.italic : FontStyle.normal,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEvidenceCard(List<dynamic> mediaUrls) {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.image_outlined,
+                    size: 20, color: Colors.grey.shade700),
+                const SizedBox(width: 8),
+                const Text(
+                  'Evidence',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 150,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: mediaUrls.length,
+                itemBuilder: (context, index) {
+                  final imageUrl = mediaUrls[index] as String;
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      right: index == mediaUrls.length - 1 ? 0 : 10,
+                    ),
+                    child: GestureDetector(
+                      onTap: () => _showImagePreview(context, imageUrl),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Stack(
+                          children: [
+                            SizedBox(
+                              width: 140,
+                              child: Image.network(
+                                imageUrl,
+                                fit: BoxFit.cover,
+                                errorBuilder: (c, e, s) => Container(
+                                  color: Colors.grey.shade200,
+                                  alignment: Alignment.center,
+                                  child: const Icon(Icons.broken_image,
+                                      color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              right: 8,
+                              bottom: 8,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withValues(alpha: 0.55),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: const Icon(Icons.zoom_in,
+                                    color: Colors.white, size: 16),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoEvidenceCard() {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          children: [
+            Icon(Icons.image_not_supported_outlined,
+                size: 28, color: Colors.grey.shade500),
+            const SizedBox(width: 12),
+            Text(
+              'No evidence uploaded',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade700,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLocationCard(GeoPoint location) {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.location_on_outlined,
+                    size: 20, color: Colors.grey.shade700),
+                const SizedBox(width: 8),
+                const Text(
+                  'Incident Location',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: SizedBox(
+                height: 220,
+                child: kIsWeb
+                    ? Container(
+                        color: Colors.grey.shade100,
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Lat: ${location.latitude.toStringAsFixed(4)}\nLng: ${location.longitude.toStringAsFixed(4)}',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      )
+                    : GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(location.latitude, location.longitude),
+                          zoom: 15,
+                        ),
+                        onMapCreated: (controller) =>
+                            mapController = controller,
+                        zoomControlsEnabled: false,
+                        markers: {
+                          Marker(
+                            markerId: const MarkerId('status_tracker_location'),
+                            position:
+                                LatLng(location.latitude, location.longitude),
+                          ),
+                        },
+                      ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoLocationCard() {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          children: [
+            Icon(Icons.location_disabled_outlined,
+                size: 28, color: Colors.grey.shade500),
+            const SizedBox(width: 12),
+            Text(
+              'Location not available',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade700,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    Color? valueColor,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: Colors.grey.shade600),
+        const SizedBox(width: 10),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 13,
+            color: Colors.grey,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const Spacer(),
+        Flexible(
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: valueColor ?? Colors.black87,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatusChip(String status) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.green.shade100,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check_circle, size: 14, color: Colors.green.shade700),
+          const SizedBox(width: 5),
+          Text(
+            status,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: Colors.green.shade700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSeverityChip(String severity) {
+    Color bgColor;
+    Color textColor;
+    IconData icon;
+    switch (severity.toLowerCase()) {
+      case 'critical':
+        bgColor = Colors.red.shade100;
+        textColor = Colors.red.shade700;
+        icon = Icons.dangerous_outlined;
+        break;
+      case 'high':
+        bgColor = Colors.orange.shade100;
+        textColor = Colors.orange.shade700;
+        icon = Icons.warning_amber_rounded;
+        break;
+      case 'medium':
+        bgColor = Colors.yellow.shade100;
+        textColor = Colors.yellow.shade800;
+        icon = Icons.info_outline;
+        break;
+      default:
+        bgColor = Colors.green.shade100;
+        textColor = Colors.green.shade700;
+        icon = Icons.check_circle_outline;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: textColor),
+          const SizedBox(width: 5),
+          Text(
+            severity,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: textColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showImagePreview(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(12),
+        child: Stack(
+          children: [
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => const Center(
+                  child:
+                      Icon(Icons.broken_image, size: 48, color: Colors.white70),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 1.2),
+                  ),
+                  child: const Icon(Icons.close, color: Colors.white, size: 20),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

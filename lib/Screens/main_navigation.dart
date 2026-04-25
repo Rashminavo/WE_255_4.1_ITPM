@@ -7,6 +7,7 @@ import '../core/auth/role_home_resolver.dart';
 import 'dashboard_screen.dart';
 import 'counselor_screen.dart';
 import 'quiz_screen.dart';
+import 'hub_home_screen.dart';
 import '../features/reporting/report_screen.dart';
 import 'buddy_hub_screen.dart';
 
@@ -23,7 +24,7 @@ class _MainNavigationState extends State<MainNavigation> {
   // Define the screens list
   final List<Widget> _screens = [
     const DashboardScreen(), // Home
-    const QuizScreen(), // Learn Screen (Member 1) - Mental Wellness Quiz
+    const HubHomeScreen(), // Learn Screen (Member 1) - Awareness Hub
     const ReportScreen(), // Report Screen (Member 2)
     const BuddyHubScreen(), // Buddy Module (Member 3)
     const CounselorScreen(), // Support/Counselor

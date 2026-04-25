@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'app_colors.dart';
+import 'counselor_screen.dart';
 
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // When your counselor/booking page is ready, import it here:
@@ -261,7 +262,7 @@ class _QuizScreenState extends State<QuizScreen>
       // Auto-show counselor alert if needed
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final result = _getResult();
-        if (result != _QuizResult.healthy) {
+        if (result == _QuizResult.highConcern) {
           _showCounselorAlert(result);
         }
       });
@@ -402,33 +403,10 @@ class _QuizScreenState extends State<QuizScreen>
                 child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.pop(ctx);
-                    // â”€â”€ Navigate to your counselor booking page â”€â”€
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (_) => const CounselorBookingPage(),
-                    //   ),
-                    // );
-                    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: AppColors.darkGreen,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        content: const Row(
-                          children: [
-                            Icon(Icons.check_circle_rounded,
-                                color: Colors.white, size: 18),
-                            SizedBox(width: 10),
-                            Text(
-                              'Redirecting to Counselor Booking...',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const CounselorScreen(),
                       ),
                     );
                   },
@@ -628,7 +606,8 @@ class _QuizScreenState extends State<QuizScreen>
                               decoration: BoxDecoration(
                                 color: isSelected
                                     ? Colors.white.withValues(alpha: 0.2)
-                                    : AppColors.darkGreen.withValues(alpha: 0.08),
+                                    : AppColors.darkGreen
+                                        .withValues(alpha: 0.08),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Center(
@@ -1016,4 +995,3 @@ class _ScoreBand extends StatelessWidget {
 
 // â”€â”€ Result levels â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 enum _QuizResult { healthy, mildConcern, highConcern }
-
